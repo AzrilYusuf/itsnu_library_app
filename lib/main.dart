@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:itsnu_app/screens/halaman_penulis.dart';
-import 'package:itsnu_app/screens/halaman_buku.dart';
-import 'package:itsnu_app/screens/halaman_kategori.dart';
-import 'package:itsnu_app/screens/halaman_profil.dart';
+import 'package:itsnu_app/screens/authors_screen.dart';
+import 'package:itsnu_app/screens/books_screen.dart';
+import 'package:itsnu_app/screens/category_screen.dart';
+import 'package:itsnu_app/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Init Supabase
-  await Supabase.initialize(url: dotenv.env['SUPABASE_URL']!, anonKey: dotenv.env['SUPABASE_ANON_KEY']!);
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
 
   runApp(const PERPUSITS());
 }
 
-class PERPUSITS extends StatelessWidget { 
+class PERPUSITS extends StatelessWidget {
   const PERPUSITS({super.key});
 
   @override
@@ -44,25 +47,25 @@ class _HalamanUtamaState extends State<HalamanUtama> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HalamanPenulis()),
+          MaterialPageRoute(builder: (context) => const AuthorsScreen()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HalamanBuku()),
+          MaterialPageRoute(builder: (context) => const BooksScreen()),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HalamanKategori()),
+          MaterialPageRoute(builder: (context) => const CategoryScreen()),
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HalamanProfil()),
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
         break;
     }

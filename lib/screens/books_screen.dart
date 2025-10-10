@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HalamanBuku extends StatelessWidget {
-  const HalamanBuku({super.key});
+class BooksScreen extends StatelessWidget {
+  const BooksScreen({super.key});
 
   // Data dummy untuk daftar buku
   final List<Map<String, String>> daftarBuku = const [

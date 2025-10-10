@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HalamanPenulis extends StatefulWidget {
-  const HalamanPenulis({super.key});
+class AuthorsScreen extends StatefulWidget {
+  const AuthorsScreen({super.key});
 
   @override
-  State<HalamanPenulis> createState() => _HalamanPenulisState();
+  State<AuthorsScreen> createState() => _AuthorsScreenState();
 }
 
-class _HalamanPenulisState extends State<HalamanPenulis> {
+class _AuthorsScreenState extends State<AuthorsScreen> {
   // URL gambar utama yang akan berubah
   String gambarPenulisUtama = "https://i.pravatar.cc/500?img=7";
 
