@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:itsnu_app/screens/halaman_penulis.dart';
 import 'package:itsnu_app/screens/halaman_buku.dart';
 import 'package:itsnu_app/screens/halaman_kategori.dart';
 import 'package:itsnu_app/screens/halaman_profil.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Init Supabase
+  await Supabase.initialize(url: dotenv.env['SUPABASE_URL']!, anonKey: dotenv.env['SUPABASE_ANON_KEY']!);
+
   runApp(const PERPUSITS());
 }
 
-class PERPUSITS extends StatelessWidget {
+class PERPUSITS extends StatelessWidget { 
   const PERPUSITS({super.key});
 
   @override
