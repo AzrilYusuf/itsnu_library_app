@@ -53,4 +53,64 @@ class SupabaseUserService {
       throw Exception('Gagal logout: $e');
     }
   }
+
+  // Upload user profile image to storage
+  Future<String> uploadUserProfilePhoto(Uint8List fileBytes) async {
+    try {
+      if (currentUser == null) {
+        throw Exception('User belum login');
+      }
+
+      // Create unique filename for user
+      final String fileName =
+          '${currentUser!.id}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      // Define user file path
+      final String filePath = 'user-profile-images/$fileName';
+
+      // Upload file to 'assets' bucket
+      await _supabaseClient.storage
+          .from('assets')
+          .uploadBinary(filePath, fileBytes);
+
+      // Update user profile image (in user table)
+      await _updateUserProfilePhoto(filePath);
+
+      return filePath;
+    } catch (e) {
+      throw Exception('Gagal upload gambar: $e');
+    }
+  }
+
+  // Update user profile image (in user table)
+  Future<void> _updateUserProfilePhoto(String filePath) async {
+    try {
+      await _supabaseClient.from('users').update({'image_path': filePath});
+    } catch (e) {
+      throw Exception('Gagal menyimpan gambar: $e');
+    }
+  }
+
+  // Delete user profile image from storage
+  Future<void> deleteUserProfilePhoto() async {
+    try {
+      if (currentUser == null) {
+        throw Exception('User belum login');
+      }
+
+      final Map<String, dynamic> user = await _supabaseClient
+          .from('users')
+          .select('image_path')
+          .eq('id', currentUser!.id)
+          .single();
+      final imagePath = user['image_path'];
+
+      if (imagePath == null) {
+        return;
+      }
+
+      await _supabaseClient.storage.from('assets').remove([imagePath]);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
+    }
+  }
 }
