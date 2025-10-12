@@ -34,8 +34,8 @@ class SupabaseUserService {
     }
   }
 
-  // Login/Sign in user using email and password
-  Future<AuthResponse> login(String email, String password) async {
+  // Log in/Sign in user using email and password
+  Future<AuthResponse> logIn(String email, String password) async {
     try {
       return await _supabaseClient.auth.signInWithPassword(
         email: email,
@@ -46,7 +46,7 @@ class SupabaseUserService {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logOut() async {
     try {
       await _supabaseClient.auth.signOut();
     } catch (e) {
@@ -55,7 +55,7 @@ class SupabaseUserService {
   }
 
   // Upload user profile image to storage
-  Future<String> uploadUserProfilePhoto(Uint8List fileBytes) async {
+  Future<void> uploadUserProfilePhoto(Uint8List fileBytes) async {
     try {
       if (currentUser == null) {
         throw Exception('User belum login');
@@ -72,19 +72,23 @@ class SupabaseUserService {
           .from('assets')
           .uploadBinary(filePath, fileBytes);
 
-      // Update user profile image (in user table)
-      await _updateUserProfilePhoto(filePath);
+      // Get file URL
+      final String fileUrl = _supabaseClient.storage
+          .from('assets')
+          .getPublicUrl(filePath);
 
-      return filePath;
+      // Update user profile image (in user table)
+      await _updateUserProfilePhoto(fileUrl);
+      
     } catch (e) {
       throw Exception('Gagal upload gambar: $e');
     }
   }
 
   // Update user profile image (in user table)
-  Future<void> _updateUserProfilePhoto(String filePath) async {
+  Future<void> _updateUserProfilePhoto(String fileUrl) async {
     try {
-      await _supabaseClient.from('users').update({'image_path': filePath});
+      await _supabaseClient.from('users').update({'image_url': fileUrl});
     } catch (e) {
       throw Exception('Gagal menyimpan gambar: $e');
     }

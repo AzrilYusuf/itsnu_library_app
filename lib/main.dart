@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:itsnu_app/screens/authors_screen.dart';
-import 'package:itsnu_app/screens/books_screen.dart';
-import 'package:itsnu_app/screens/category_screen.dart';
-import 'package:itsnu_app/screens/profile_screen.dart';
+import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
+import 'package:itsnu_app/screens/books_screen/books_screen.dart';
+import 'package:itsnu_app/screens/category_screen/category_screen.dart';
+import 'package:itsnu_app/screens/profile_screen/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // Init Supabase
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: 'https://uadcrpkrcmcdvgxrrhiq.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZGNycGtyY21jZHZneHJyaGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5OTc1MDUsImV4cCI6MjA3NTU3MzUwNX0.5d_FXgTZ2uJeznSJzl3ObvehX-lclQqTuy_sM0shbUk',
   );
 
   runApp(const PERPUSITS());
@@ -25,19 +24,19 @@ class PERPUSITS extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HalamanUtama(),
+      home: HomeScreen(),
     );
   }
 }
 
-class HalamanUtama extends StatefulWidget {
-  const HalamanUtama({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HalamanUtama> createState() => _HalamanUtamaState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HalamanUtamaState extends State<HalamanUtama> {
+class _HomeScreenState extends State<HomeScreen> {
   // Selalu mulai dari tab "Beranda" (index 0)
   final int _currentIndex = 0;
 
