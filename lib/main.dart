@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
 import 'package:itsnu_app/screens/books_screen/books_screen.dart';
@@ -14,17 +15,17 @@ void main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZGNycGtyY21jZHZneHJyaGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5OTc1MDUsImV4cCI6MjA3NTU3MzUwNX0.5d_FXgTZ2uJeznSJzl3ObvehX-lclQqTuy_sM0shbUk',
   );
 
-  runApp(const PERPUSITS());
+  runApp(const PERPUSITSNU());
 }
 
-class PERPUSITS extends StatelessWidget {
-  const PERPUSITS({super.key});
+class PERPUSITSNU extends StatelessWidget {
+  const PERPUSITSNU({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: AuthScreen(),
     );
   }
 }
