@@ -32,7 +32,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _handleSubmit() async {
     // Validate the form, if invalid, return
     if (!_formKey.currentState!.validate()) {
-      return;
+      throw Exception('Form tidak valid');
     }
 
     setState(() {
@@ -44,29 +44,43 @@ class _AuthScreenState extends State<AuthScreen> {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text;
 
-      if (_isLogin) {
-        await _supabaseUserService.logIn(email, password);
-      } else {
-        await _supabaseUserService.register(email, password);
+      if (!_isLogin) {
+        final respon = await _supabaseUserService.register(email, password);
+
+        if (!mounted) return;
+
+        // Navigate to login screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthScreen()),
+        );
       }
+      await _supabaseUserService.logIn(email, password);
 
       // Check if widget isn't mounted then return null
       // Ensures navigation only happens if the widget is still exists after the async
       if (!mounted) return;
-      
+
       // Navigate to home screen
-      //* NOTE: Navigator.pushReplacement replaces the current screen (login/register) with the home screen
-      //* const HomeScreen() should be the main/home widget
+      /* 
+        * NOTE: Navigator.pushReplacement replaces the current screen (login/register) with the home screen
+        *        const HomeScreen() should be the main/home widget
+      */
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } catch (e) {
-      if (!mounted) return;
+      // if (!mounted) return;
       setState(() {
-        _isLoading = false;
         _errorMessage = e.toString();
       });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -85,7 +99,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              // key: _formKey,
+              key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -111,9 +125,11 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 20.0),
 
                   Text(
-                    _isLogin ? 'Masuk' : 'Daftar',
+                    _isLogin
+                        ? 'Masuk ke akun anda'
+                        : 'Daftar akun baru untuk mulai membaca buku',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.teal[900],
                     ),

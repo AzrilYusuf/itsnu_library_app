@@ -15,11 +15,11 @@ void main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZGNycGtyY21jZHZneHJyaGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5OTc1MDUsImV4cCI6MjA3NTU3MzUwNX0.5d_FXgTZ2uJeznSJzl3ObvehX-lclQqTuy_sM0shbUk',
   );
 
-  runApp(const PERPUSITSNU());
+  runApp(const PerpusITSNU());
 }
 
-class PERPUSITSNU extends StatelessWidget {
-  const PERPUSITSNU({super.key});
+class PerpusITSNU extends StatelessWidget {
+  const PerpusITSNU({super.key});
 
   @override
   Widget build(BuildContext context) {

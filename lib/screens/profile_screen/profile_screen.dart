@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:itsnu_app/main.dart';
+import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
 import 'package:itsnu_app/screens/profile_screen/action_button.dart';
 import 'package:itsnu_app/screens/profile_screen/info_card.dart';
 import 'package:itsnu_app/screens/profile_screen/info_card_item.dart';
@@ -71,8 +71,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Navigate to login screen and clear all routes
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ), // ! CHANGE ME
+            builder: (context) => const AuthScreen(),
+          ),
           (route) => false, // Clear all routes
         );
       }
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Username or Email
                   Text(
-                    'username', // !CHANGE
+                    _getUserData('name') ?? userEmail,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // ... is used to expand the list
                     const SizedBox(height: 4),
                     Text(
-                      'email', // !CHANGE
+                      userEmail,
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium?.copyWith(color: Colors.white),
