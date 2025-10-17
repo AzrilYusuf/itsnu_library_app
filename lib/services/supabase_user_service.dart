@@ -1,5 +1,6 @@
 import 'dart:typed_data'; // for Uint8List
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:itsnu_app/core/auth_notifier.dart';
 
 class SupabaseUserService {
   /*
@@ -16,6 +17,7 @@ class SupabaseUserService {
   SupabaseUserService._internal();
 
   final SupabaseClient _supabaseClient = Supabase.instance.client;
+  final AuthNotifier _authNotifier = AuthNotifier();
 
   // Getter
   SupabaseClient get supabaseClient => _supabaseClient;
@@ -37,10 +39,12 @@ class SupabaseUserService {
   // Log in/Sign in user using email and password
   Future<AuthResponse> logIn(String email, String password) async {
     try {
-      return await _supabaseClient.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      final AuthResponse response = await _supabaseClient.auth
+          .signInWithPassword(email: email, password: password);
+      final String? token = response.session?.accessToken;
+      
+      await _authNotifier.saveToken(token!);
+      return response;
     } catch (e) {
       throw Exception('Gagal login: $e');
     }
@@ -48,6 +52,7 @@ class SupabaseUserService {
 
   Future<void> logOut() async {
     try {
+      await _authNotifier.clearToken();
       await _supabaseClient.auth.signOut();
     } catch (e) {
       throw Exception('Gagal logout: $e');
@@ -79,7 +84,6 @@ class SupabaseUserService {
 
       // Update user profile image (in user table)
       await _updateUserProfilePhoto(fileUrl);
-      
     } catch (e) {
       throw Exception('Gagal upload gambar: $e');
     }

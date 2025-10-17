@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:itsnu_app/main.dart';
+import 'package:go_router/go_router.dart';
+import 'package:itsnu_app/screens/home_screen/home_screen.dart';
 import 'package:itsnu_app/services/supabase_user_service.dart';
 import 'package:itsnu_app/widgets/app_logo.dart';
 
@@ -45,15 +46,12 @@ class _AuthScreenState extends State<AuthScreen> {
       final String password = _passwordController.text;
 
       if (!_isLogin) {
-        final respon = await _supabaseUserService.register(email, password);
+        await _supabaseUserService.register(email, password);
 
         if (!mounted) return;
 
         // Navigate to login screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AuthScreen()),
-        );
+        GoRouter.of(context).go('/auth');
       }
       await _supabaseUserService.logIn(email, password);
 
@@ -62,14 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
 
       // Navigate to home screen
-      /* 
-        * NOTE: Navigator.pushReplacement replaces the current screen (login/register) with the home screen
-        *        const HomeScreen() should be the main/home widget
-      */
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      GoRouter.of(context).go('/home');
     } catch (e) {
       // if (!mounted) return;
       setState(() {

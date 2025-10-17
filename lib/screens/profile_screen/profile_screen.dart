@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:itsnu_app/screens/profile_screen/action_button.dart';
 import 'package:itsnu_app/screens/profile_screen/info_card.dart';
 import 'package:itsnu_app/screens/profile_screen/info_card_item.dart';
@@ -67,15 +67,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       await _supabaseUserService.logOut();
-      if (mounted) {
-        // Navigate to login screen and clear all routes
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const AuthScreen(),
-          ),
-          (route) => false, // Clear all routes
-        );
+      if (!mounted) {
+        return;
       }
+        // Navigate to login screen and clear all routes
+        GoRouter.of(context).go('/auth');
     } catch (e) {
       if (mounted) {
         setState(() {
