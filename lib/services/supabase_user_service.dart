@@ -42,7 +42,7 @@ class SupabaseUserService {
       final AuthResponse response = await _supabaseClient.auth
           .signInWithPassword(email: email, password: password);
       final String? token = response.session?.accessToken;
-      
+
       await _authNotifier.saveToken(token!);
       return response;
     } catch (e) {
@@ -56,6 +56,66 @@ class SupabaseUserService {
       await _supabaseClient.auth.signOut();
     } catch (e) {
       throw Exception('Gagal logout: $e');
+    }
+  }
+
+  Future<void> updateUserData(Map<String, dynamic> data) async {
+    try {
+      final Map<String, dynamic>? currentUserMetaData =
+          currentUser!.userMetadata;
+
+      if (currentUser == null) {
+        throw Exception('User belum login');
+      }
+
+      await _supabaseClient.auth.updateUser(
+        UserAttributes(
+          data: {
+            ...?currentUserMetaData,
+            'name': data['name'],
+            'phone': data['phone'],
+            'address': data['address'],
+          },
+        ),
+      );
+    } catch (e) {
+      throw Exception('Gagal update data: $e');
+    }
+  }
+
+  Future<void> updateUserPassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    try {
+      if (currentUser == null) {
+        throw Exception('User belum login');
+      }
+      if (currentUser?.email == null) {
+        throw Exception('User belum login');
+      }
+
+      /* 
+        Check if current password is correct using signInWithPassword
+        Because updateUser doesn't require current password and 
+        supabase doesn't have a way to check if current password is correct
+      */
+      final AuthResponse res = await _supabaseClient.auth.signInWithPassword(
+        email: currentUser?.email,
+        password: currentPassword,
+      );
+
+      // Check if session is null
+      if (res.session == null) {
+        throw Exception('Password lama salah');
+      }
+
+      // Update password after checking if current password is correct
+      await _supabaseClient.auth.updateUser(
+        UserAttributes(data: {'password': newPassword}),
+      );
+    } catch (e) {
+      throw Exception('Gagal update password: $e');
     }
   }
 
@@ -92,7 +152,16 @@ class SupabaseUserService {
   // Update user profile image (in user table)
   Future<void> _updateUserProfilePhoto(String fileUrl) async {
     try {
-      await _supabaseClient.from('users').update({'image_url': fileUrl});
+      final Map<String, dynamic>? currentUserMetaData =
+          currentUser!.userMetadata;
+
+      if (currentUser == null) {
+        throw Exception('User belum login');
+      }
+
+      await _supabaseClient.auth.updateUser(
+        UserAttributes(data: {...?currentUserMetaData, 'image_url': fileUrl}),
+      );
     } catch (e) {
       throw Exception('Gagal menyimpan gambar: $e');
     }
@@ -107,14 +176,12 @@ class SupabaseUserService {
 
       final Map<String, dynamic> user = await _supabaseClient
           .from('users')
-          .select('image_path')
+          .select('image_url')
           .eq('id', currentUser!.id)
           .single();
-      final imagePath = user['image_path'];
+      final imagePath = user['image_url'];
 
-      if (imagePath == null) {
-        return;
-      }
+      if (imagePath == null) throw Exception('Gambar tidak ditemukan');
 
       await _supabaseClient.storage.from('assets').remove([imagePath]);
     } catch (e) {

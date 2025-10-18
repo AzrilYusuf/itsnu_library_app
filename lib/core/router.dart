@@ -6,6 +6,7 @@ import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
 import 'package:itsnu_app/screens/books_screen/books_screen.dart';
 import 'package:itsnu_app/screens/category_screen/category_screen.dart';
 import 'package:itsnu_app/screens/home_screen/home_screen.dart';
+import 'package:itsnu_app/screens/profile_screen/edit_profile_screen.dart';
 import 'package:itsnu_app/screens/profile_screen/profile_screen.dart';
 import 'package:itsnu_app/screens/splash_screen/splash_screen.dart';
 
@@ -112,6 +113,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                 path: '/profile',
                 name: 'profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: '/edit',
+                    name: 'edit',
+                    builder: (context, state) => const EditProfileScreen(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -125,20 +133,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       final bool loggingIn = state.path == '/auth' || state.path == '/splash';
       final String path = state.uri.path;
       // If not logged and trying to access protected tabs (profile)
-      if (!loggedIn && path.startsWith('/profile')) {
-        return '/auth';
-      }
+      if (!loggedIn && path.startsWith('/profile')) return '/auth';
 
       // After splash finished, if logged in go to /home else to /auth
-      if (path == '/splash') {
-        // Let SplashScreen decide to go to /home or /auth
-        return null;
-      }
+      // Let SplashScreen decide to go to /home or /auth
+      if (path == '/splash') return null;
 
       // If already logged in and at /auth, send to /home
-      if (loggingIn && path == '/auth') {
-        return '/home';
-      }
+      if (loggingIn && path == '/auth') return '/home';
 
       return null;
     },

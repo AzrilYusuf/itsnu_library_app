@@ -20,17 +20,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String get userId => _supabaseUserService.currentUser?.id ?? '';
   DateTime? get createdAt {
     final String? createdAtString = _supabaseUserService.currentUser?.createdAt;
-    if (createdAtString == null) {
-      return null;
-    }
+
+    if (createdAtString == null) return null;
+
     return DateTime.parse(createdAtString);
   }
 
   // Get user metadata
-  String? _getUserData(String key) {
+  Map<String, dynamic> _getUserData() {
     final Map<String, dynamic>? metaData =
         _supabaseUserService.currentUser?.userMetadata;
-    return metaData?[key]?.toString();
+    return metaData!;
+  }
+
+  Map<String, dynamic> get _userData => _getUserData();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final Object? extra = GoRouterState.of(context).extra;
+    if (extra is Map && extra['refresh'] == true) {
+      _getUserData();
+    }
   }
 
   // Logout function
@@ -67,11 +78,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       await _supabaseUserService.logOut();
-      if (!mounted) {
-        return;
-      }
-        // Navigate to login screen and clear all routes
-        GoRouter.of(context).go('/auth');
+
+      if (!mounted) return;
+
+      // Navigate to login screen and clear all routes
+      GoRouter.of(context).go('/auth');
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -118,14 +129,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(40.0),
                       // Set background image either from user metadata or default
-                      image: _getUserData('image_url') != null
+                      image: _userData['image_url'] != null
                           ? DecorationImage(
-                              image: NetworkImage(_getUserData('image_url')!),
+                              image: NetworkImage(_userData['image_url']),
                               fit: BoxFit.cover,
                             )
                           : null,
                     ),
-                    child: _getUserData('image_url') == null
+                    child: _userData['image_url'] == null
                         ? const Icon(
                             Icons.person,
                             size: 40.0,
@@ -138,14 +149,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // Username or Email
                   Text(
-                    _getUserData('name') ?? userEmail,
+                    _userData['name'] ?? userEmail,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
                   // Show email if username is displayed
-                  if (_getUserData('name') != null) ...[
+                  if (_userData['name'] != null) ...[
                     // ... is used to expand the list
                     const SizedBox(height: 4),
                     Text(
@@ -178,17 +189,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 InfoCardItem(
                   label: 'Nama',
-                  value: _getUserData('name') ?? 'Belum diatur',
+                  value: _userData['name'] ?? 'Belum diatur',
                 ),
                 InfoCardItem(
                   label: 'Nomor Telepon',
-                  value: _getUserData('phone') ?? 'Belum diatur',
+                  value: _userData['phone'] ?? 'Belum diatur',
                 ),
                 InfoCardItem(
                   label: 'Alamat',
-                  value: _getUserData('address') ?? 'Belum diatur',
+                  value: _userData['address'] ?? 'Belum diatur',
                 ),
               ],
+            ),
+
+            SizedBox(height: 24.0),
+
+            // Edit profile button
+            ActionButton(
+              icon: Icons.edit,
+              label: 'Edit Profil',
+              color: Colors.teal,
+              onPressed: () {
+                GoRouter.of(context).go('/profile/edit');
+              },
             ),
 
             SizedBox(height: 24.0),

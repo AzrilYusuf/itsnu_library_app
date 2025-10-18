@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:itsnu_app/screens/home_screen/home_screen.dart';
 import 'package:itsnu_app/services/supabase_user_service.dart';
 import 'package:itsnu_app/widgets/app_logo.dart';
 
