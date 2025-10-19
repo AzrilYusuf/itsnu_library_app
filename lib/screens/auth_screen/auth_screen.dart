@@ -20,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isLogin = true; // Used to toggle between login and signup
   bool _isLoading = false;
   String? _errorMessage;
+  String? _message;
 
   // Dispose controllers when the widget is disposed
   @override
@@ -38,6 +39,7 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _message = null;
     });
 
     try {
@@ -48,10 +50,15 @@ class _AuthScreenState extends State<AuthScreen> {
         await _supabaseUserService.register(email, password);
 
         if (!mounted) return;
-
+        setState(() {
+          _message =
+              'Silakan cek email Anda dan konfirmasi akun sebelum login.';
+        });
         // Navigate to login screen
         GoRouter.of(context).go('/auth');
+        return; // Stop the function (preventing calling logIn())
       }
+
       await _supabaseUserService.logIn(email, password);
 
       // Check if widget isn't mounted then return null
@@ -78,6 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLogin = !_isLogin;
       _errorMessage = null;
+      _message = null;
     });
   }
 
@@ -115,9 +123,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 20.0),
 
                   Text(
-                    _isLogin
-                        ? 'Masuk ke akun anda'
-                        : 'Daftar akun baru untuk mulai membaca buku',
+                    _isLogin ? 'Masuk ke akun anda' : 'Daftar akun baru',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
@@ -179,6 +185,22 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
 
                   const SizedBox(height: 24.0),
+
+                  // Error message
+                  if (_message != null)
+                    Container(
+                      padding: const EdgeInsets.all(12.0),
+                      margin: const EdgeInsets.only(bottom: 16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade300,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        _message!,
+                        style: TextStyle(color: Colors.green.shade900),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
 
                   // Error message
                   if (_errorMessage != null)

@@ -116,11 +116,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
       }
 
+      // trim() to remove leading and trailing spaces
+      final String? name = _nameController.text.trim().isEmpty
+          ? null
+          : _nameController.text.trim();
+      final String? phone = _phoneController.text.trim().isEmpty
+          ? null
+          : _phoneController.text.trim();
+      final String? address = _addressController.text.trim().isEmpty
+          ? null
+          : _addressController.text.trim();
+
       // Update user data in supabase
       await _supabaseUserService.updateUserData({
-        'name': _nameController.text,
-        'phone': _phoneController.text,
-        'address': _addressController.text,
+        'name': name,
+        'phone': phone,
+        'address': address,
       });
 
       // Check if widget isn't mounted then return null
@@ -228,6 +239,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ElevatedButton(
             onPressed: () async {
               try {
+                if (newPasswordController.value != confirmPasswordController.value) {
+                  throw Exception('Konfirmasi kata sandi tidak cocok.');
+                }
+
                 await _supabaseUserService.updateUserPassword(
                   currentPasswordController.text,
                   newPasswordController.text,

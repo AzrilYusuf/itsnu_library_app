@@ -8,22 +8,34 @@ class AuthNotifier extends ChangeNotifier {
 
   // Save token after login
   Future<void> saveToken(String token) async {
-    await _secureStorage.write(key: 'access_token', value: token);
-    _isLoggedIn = true;
-    notifyListeners(); // Notify listeners is used for updating the UI
+    try {
+      await _secureStorage.write(key: 'access_token', value: token);
+      _isLoggedIn = true;
+      notifyListeners(); // Notify listeners is used for updating the UI
+    } catch (e) {
+      throw Exception('Gagal menyimpan token: $e');
+    }
   }
 
   // Read token from local storage
   Future<void> restoreLogin() async {
-    final String? token = await _secureStorage.read(key: 'access_token');
-    _isLoggedIn = token != null; // Check if token is not null
-    notifyListeners();
+    try {
+      final String? token = await _secureStorage.read(key: 'access_token');
+      _isLoggedIn = token != null; // Check if token is not null
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Gagal membaca token: $e');
+    }
   }
 
   // Clear token on logout
   Future<void> clearToken() async {
-    await _secureStorage.delete(key: 'access_token');
-    _isLoggedIn = false;
-    notifyListeners();
+    try {
+      await _secureStorage.delete(key: 'access_token');
+      _isLoggedIn = false;
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Gagal menghapus token: $e');
+    }
   }
 }

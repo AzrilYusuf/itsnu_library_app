@@ -112,7 +112,7 @@ class SupabaseUserService {
 
       // Update password after checking if current password is correct
       await _supabaseClient.auth.updateUser(
-        UserAttributes(data: {'password': newPassword}),
+        UserAttributes(password: newPassword),
       );
     } catch (e) {
       throw Exception('Gagal update password: $e');
