@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:itsnu_app/core/auth_notifier.dart';
+import 'package:itsnu_app/models/author_model.dart';
 import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/author_form_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
@@ -87,7 +88,8 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                     name: 'authorForm',
                     builder: (context, state) {
                       // You can extract parameters from state if needed
-                      return AuthorFormScreen();
+                      final author = state.extra as AuthorModel?;
+                      return AuthorFormScreen(author: author);
                     },
                   ),
                 ],
@@ -146,12 +148,12 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       // If not logged and trying to access protected tabs (profile)
       if (!loggedIn && path.startsWith('/profile')) return '/auth';
 
-      // After splash finished, if logged in go to /home else to /auth
-      // Let SplashScreen decide to go to /home or /auth
+      // After splash finished, if logged in go to / else to /auth
+      // Let SplashScreen decide to go to / or /auth
       if (path == '/splash') return null;
 
-      // If already logged in and at /auth, send to /home
-      if (loggingIn && path == '/auth') return '/home';
+      // If already logged in and at /auth, send to /
+      if (loggingIn && path == '/auth') return '/';
 
       return null;
     },

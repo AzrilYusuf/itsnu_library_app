@@ -64,15 +64,36 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                       final author = authors[index];
                       return GestureDetector(
                         onTap: () {
-                          // Handle thumbnail tap if needed
+                          GoRouter.of(context).go('/authors/form', extra: author);
                         },
-                        child: Image.network(
-                          author.imageUrl ?? '',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.broken_image);
-                          },
-                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: author.imageUrl != null
+                                    ? Image.network(
+                                        author.imageUrl!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      )
+                                    : const Icon(
+                                        Icons.person,
+                                        size: 50,
+                                      ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  author.name,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       );
                     },
                   );

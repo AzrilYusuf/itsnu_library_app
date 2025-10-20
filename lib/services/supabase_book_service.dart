@@ -45,11 +45,18 @@ class SupabaseBookService {
         throw Exception('User belum login');
       }
 
+      final Map<String, dynamic> data = {
+        'title': book.title,
+        'author_id': book.authorId,
+        'category': book.category.name,
+      };
+
       final Map<String, dynamic> response = await _supabaseClient
           .from('books')
-          .insert(book.toJson())
+          .insert(data)
           .select()
           .single();
+
       final BookModel newBook = BookModel.fromJson(response);
 
       // If fileBytes is not null, upload book image
@@ -160,7 +167,7 @@ class SupabaseBookService {
           .eq('id', book.id!)
           .select()
           .single();
-      
+
       return BookModel.fromJson(response);
     } catch (e) {
       throw Exception('Gagal update data buku: $e');
@@ -200,12 +207,13 @@ class SupabaseBookService {
 
       // Get book data
       final BookModel book = await getBookById(bookId);
-      if (book.imageUrl == null) {
-        throw Exception('Tidak ada gambar untuk dihapus');
-      }
 
       // Get book image url
-      final String imageUrl = book.imageUrl!;
+      final String? imageUrl = book.imageUrl;
+
+      // if imageUrl is null or empty, return; (nothing to do)
+      if (imageUrl == null || imageUrl.trim().isEmpty) return;
+
       final String filePath = imageUrl.split('/assets/').last;
 
       // Delete image from storage

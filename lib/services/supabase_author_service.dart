@@ -51,7 +51,7 @@ class SupabaseAuthorService {
 
       final Map<String, dynamic> response = await _supabaseClient
           .from('authors')
-          .insert(author.name)
+          .insert({'name': author.name})
           .select()
           .single();
       final AuthorModel newAuthor = AuthorModel.fromJson(response);
@@ -205,12 +205,13 @@ class SupabaseAuthorService {
 
       // Get author data
       final AuthorModel author = await getAuthorById(authorId);
-      if (author.imageUrl == null) {
-        throw Exception('Tidak ada gambar untuk dihapus');
-      }
 
       // Get author image url
-      final String imageUrl = author.imageUrl!;
+      final String? imageUrl = author.imageUrl;
+
+      // if imageUrl is null or empty, return; (nothing to do)
+      if (imageUrl == null || imageUrl.trim().isEmpty) return;
+
       final String filePath = imageUrl.split('/assets/').last;
 
       // Delete image from storage

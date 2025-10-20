@@ -34,7 +34,7 @@ class AuthorProvider extends ChangeNotifier {
   Future<AuthorModel?> getAuthorById(String id) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       return await _authorService.getAuthorById(id);
     } catch (e) {
@@ -48,14 +48,16 @@ class AuthorProvider extends ChangeNotifier {
   Future<bool> createAuthor(AuthorModel author, Uint8List? fileBytes) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       final AuthorModel newAuthor = await _authorService.addAuthor(
         author,
         fileBytes,
       );
+
       _authors.insert(0, newAuthor); // Insert at the beginning of the list
       notifyListeners();
+
       return true;
     } catch (e) {
       _setError(e.toString());
@@ -68,7 +70,7 @@ class AuthorProvider extends ChangeNotifier {
   Future<bool> updateAuthor(AuthorModel author, Uint8List? fileBytes) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       final AuthorModel updatedAuthor = await _authorService.updateAuthor(
         author,
@@ -94,13 +96,13 @@ class AuthorProvider extends ChangeNotifier {
   Future<bool> deleteAuthor(String id) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       await _authorService.deleteAuthor(id);
       // Remove the author from the list
       _authors.removeWhere((a) => a.id == id);
       notifyListeners();
-      
+
       return true;
     } catch (e) {
       _setError(e.toString());

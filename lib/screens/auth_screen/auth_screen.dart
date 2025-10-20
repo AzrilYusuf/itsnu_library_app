@@ -66,7 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
 
       // Navigate to home screen
-      GoRouter.of(context).go('/home');
+      GoRouter.of(context).go('/');
     } catch (e) {
       // if (!mounted) return;
       setState(() {

@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await auth.restoreLogin();
     if (auth.isLoggedIn) {
       if (!mounted) return;
-      GoRouter.of(context).go('/home');
+      GoRouter.of(context).go('/');
     } else {
       if (!mounted) return;
       GoRouter.of(context).go('/auth');
