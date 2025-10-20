@@ -18,13 +18,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final ImagePicker _imagePicker = ImagePicker();
+  Uint8List? _selectedImageBytes;
+  String? _currentProfilePhotoUrl;
 
   bool _isLoading = false;
   String? _errorMessage;
 
-  final ImagePicker _imagePicker = ImagePicker();
-  Uint8List? _selectedImageBytes;
-  String? _currentProfilePhotoUrl;
 
   @override
   void initState() {
