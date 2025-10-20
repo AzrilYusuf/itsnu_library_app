@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:itsnu_app/providers/author_provider.dart';
 
 class AuthorsScreen extends StatefulWidget {
   const AuthorsScreen({super.key});
@@ -8,23 +11,24 @@ class AuthorsScreen extends StatefulWidget {
 }
 
 class _AuthorsScreenState extends State<AuthorsScreen> {
-  // URL gambar utama yang akan berubah
-  String gambarPenulisUtama = "https://i.pravatar.cc/500?img=7";
-
-  // List data penulis (URL dan nama)
-  final List<Map<String, String>> dataPenulis = [
-    {"url": "https://i.pravatar.cc/150?img=7", "id": "7"},
-    {"url": "https://i.pravatar.cc/150?img=5", "id": "5"},
-    {"url": "https://i.pravatar.cc/150?img=11", "id": "11"},
-    {"url": "https://i.pravatar.cc/150?img=14", "id": "14"},
-    {"url": "https://i.pravatar.cc/150?img=32", "id": "32"},
-    {"url": "https://i.pravatar.cc/150?img=40", "id": "40"},
-  ];
-
-  void _gantiGambarUtama(String id) {
-    setState(() {
-      gambarPenulisUtama = "https://i.pravatar.cc/500?img=$id";
+  @override
+  void initState() {
+    super.initState();
+    // Run code after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadData() async {
+    final authorProvider = Provider.of<AuthorProvider>(context, listen: false);
+
+    await authorProvider.fetchAuthors();
   }
 
   @override
@@ -36,45 +40,55 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
       ),
       body: Column(
         children: [
-          // Widget untuk menampilkan gambar utama
-          Container(
-            height: 300,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(gambarPenulisUtama),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
           // Widget untuk menampilkan grid thumbnail
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: dataPenulis.length,
-              itemBuilder: (context, index) {
-                final penulis = dataPenulis[index];
-                return GestureDetector(
-                  onTap: () => _gantiGambarUtama(penulis['id']!),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: NetworkImage(penulis['url']!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                );
+            child: Consumer<AuthorProvider>(
+              builder: (context, authorProvider, child) {
+                if (authorProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (authorProvider.hasError) {
+                  return Center(
+                    child: Text('Error: ${authorProvider.errorMessage}'),
+                  );
+                } else {
+                  final authors = authorProvider.authors;
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 4.0,
+                          mainAxisSpacing: 4.0,
+                        ),
+                    itemCount: authors.length,
+                    itemBuilder: (context, index) {
+                      final author = authors[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Handle thumbnail tap if needed
+                        },
+                        child: Image.network(
+                          author.imageUrl ?? '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.broken_image);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          GoRouter.of(context).go('/authors/form');
+        },
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:itsnu_app/core/auth_notifier.dart';
 import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
+import 'package:itsnu_app/screens/authors_screen/author_form_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
 import 'package:itsnu_app/screens/books_screen/books_screen.dart';
 import 'package:itsnu_app/screens/category_screen/category_screen.dart';
@@ -66,7 +67,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/home',
+                path: '/',
                 name: 'home',
                 builder: (context, state) => const HomeScreen(),
               ),
@@ -80,6 +81,16 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                 path: '/authors',
                 name: 'authors',
                 builder: (context, state) => const AuthorsScreen(),
+                routes: [
+                  GoRoute(
+                    path: '/form',
+                    name: 'authorForm',
+                    builder: (context, state) {
+                      // You can extract parameters from state if needed
+                      return AuthorFormScreen();
+                    },
+                  ),
+                ],
               ),
             ],
           ),

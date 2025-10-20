@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:itsnu_app/core/auth_notifier.dart';
-import 'package:itsnu_app/core/router.dart';
 import 'package:provider/provider.dart';
+import 'package:itsnu_app/core/router.dart';
+import 'package:itsnu_app/core/auth_notifier.dart';
+import 'package:itsnu_app/providers/author_provider.dart';
+import 'package:itsnu_app/providers/book_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -56,8 +58,12 @@ class _PerpusITSNUState extends State<PerpusITSNU> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AuthNotifier>.value(
-      value: _authNotifier,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthNotifier>.value(value: _authNotifier),
+        ChangeNotifierProvider<AuthorProvider>(create: (_) => AuthorProvider()),
+        ChangeNotifierProvider<BookProvider>(create: (_) => BookProvider()),
+      ],
       child: MaterialApp.router(
         routerConfig: _router,
         debugShowCheckedModeBanner: false,
