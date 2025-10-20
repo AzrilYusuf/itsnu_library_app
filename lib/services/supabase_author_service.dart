@@ -1,0 +1,183 @@
+import 'dart:typed_data';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:itsnu_app/models/author_model.dart';
+
+class SupabaseAuthorService {
+  static final SupabaseAuthorService _instance =
+      SupabaseAuthorService._internal();
+  factory SupabaseAuthorService() => _instance;
+  SupabaseAuthorService._internal();
+
+  final SupabaseClient _supabaseClient = Supabase.instance.client;
+
+  // Getter
+  SupabaseClient get supabaseClient => _supabaseClient;
+  User? get currentUser => _supabaseClient.auth.currentUser;
+  bool get isAuthenticated => currentUser != null;
+
+  Future<List<AuthorModel>> getAuthors() async {
+    try {
+      final List<Map<String, dynamic>> authors = await _supabaseClient
+          .from('authors')
+          .select()
+          .order('name', ascending: true);
+      return authors.map((author) => AuthorModel.fromJson(author)).toList();
+    } catch (e) {
+      throw Exception('Gagal mengambil data penulis: $e');
+    }
+  }
+
+  Future<AuthorModel> getAuthorById(String id) async {
+    try {
+      final Map<String, dynamic> author = await _supabaseClient
+          .from('authors')
+          .select()
+          .eq('id', id)
+          .single();
+      return AuthorModel.fromJson(author);
+    } catch (e) {
+      throw Exception('Gagal mengambil data penulis: $e');
+    }
+  }
+
+  Future<AuthorModel> addAuthor(
+    AuthorModel author,
+    Uint8List? fileBytes,
+  ) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      final Map<String, dynamic> response = await _supabaseClient
+          .from('authors')
+          .insert(author.name)
+          .select()
+          .single();
+      final AuthorModel newAuthor = AuthorModel.fromJson(response);
+      if (fileBytes != null) {
+        // Upload author image to storage
+        await _uploadAuthorImage(fileBytes, newAuthor.id!);
+      }
+      return newAuthor;
+    } catch (e) {
+      throw Exception('Gagal menambahkan data penulis: $e');
+    }
+  }
+
+  // Upload author image to Supabase Storage
+  Future<void> _uploadAuthorImage(Uint8List fileBytes, String authorId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Create unique filename for author
+      final String fileName =
+          '${authorId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      // Define author file path
+      final String filePath = 'author-profile-images/$fileName';
+
+      // Upload file to 'assets' bucket
+      await _supabaseClient.storage
+          .from('assets')
+          .uploadBinary(filePath, fileBytes);
+
+      // Get file URL
+      final String fileUrl = _supabaseClient.storage
+          .from('assets')
+          .getPublicUrl(filePath);
+
+      // Update author image_url in database
+      await _updateAuthorImage(authorId, fileUrl);
+    } catch (e) {
+      throw Exception('Gagal upload gambar: $e');
+    }
+  }
+
+  // Update author image_url in database
+  Future<void> _updateAuthorImage(String authorId, String fileUrl) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      await _supabaseClient
+          .from('authors')
+          .update({'image_url': fileUrl})
+          .eq('id', authorId);
+    } catch (e) {
+      throw Exception('Gagal menyimpan gambar: $e');
+    }
+  }
+
+  Future<void> updateAuthor(AuthorModel author, Uint8List? fileBytes) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      if (author.id == null) {
+        throw Exception('ID penulis tidak ditemukan');
+      }
+
+      // If new image is provided, upload it
+      if (fileBytes != null) {
+        if (author.imageUrl != null) {
+          // Delete existing image
+          await deleteAuthorImage(author.id!);
+        }
+        // Upload author image to storage
+        await _uploadAuthorImage(fileBytes, author.id!);
+      }
+
+      // Preventing empty strings from being updated
+      final Map<String, dynamic> data = {
+        if (author.name.trim().isNotEmpty) 'name': author.name,
+        // if (author.imageUrl != null && author.imageUrl!.trim().isNotEmpty)
+        //   'image_url': author.imageUrl,
+      };
+
+      await _supabaseClient.from('authors').update(data).eq('id', author.id!);
+    } catch (e) {
+      throw Exception('Gagal update data penulis: $e');
+    }
+  }
+
+  Future<void> deleteAuthorImage(String authorId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Get author data
+      final AuthorModel author = await getAuthorById(authorId);
+      if (author.imageUrl == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
+
+      // Get author image url
+      final String imageUrl = author.imageUrl!;
+      final String filePath = imageUrl.split('/assets/').last;
+
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
+
+      // Update author image_url in database to null
+      await _supabaseClient
+          .from('authors')
+          .update({'image_url': null})
+          .eq('id', authorId);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
+    }
+  }
+
+  Future<void> deleteAuthor(String id) async {
+    try {
+      await _supabaseClient.from('authors').delete().eq('id', id);
+    } catch (e) {
+      throw Exception('Gagal menghapus data penulis: $e');
+    }
+  }
+}

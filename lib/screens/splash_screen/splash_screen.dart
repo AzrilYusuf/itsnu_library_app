@@ -4,7 +4,7 @@ import 'package:itsnu_app/core/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -18,6 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _init() async {
+    // Provider is used for state management
+    // Provider.of<AuthNotifier> is used for updating the UI without calling setState
     final AuthNotifier auth = Provider.of<AuthNotifier>(context, listen: false);
     await auth.restoreLogin();
     if (auth.isLoggedIn) {

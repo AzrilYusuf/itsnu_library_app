@@ -19,17 +19,17 @@ class BookModel {
   final String? id;
   final String title;
   final String authorId;
-  final String? imagePath;
+  final String? imageUrl;
   final BookCategory category;
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   BookModel({
     this.id,
     required this.title,
     required this.authorId,
-    this.imagePath,
+    this.imageUrl,
     required this.category,
-    required this.createdAt,
+    this.createdAt,
   });
 
   // factory constructor is for converting JSON to BookModel
@@ -39,7 +39,7 @@ class BookModel {
       id: json['id'],
       title: json['title'],
       authorId: json['author_id'],
-      imagePath: json['image_path'],
+      imageUrl: json['image_url'],
       category: BookCategory.fromString(json['category']),
       createdAt: DateTime.parse(json['created_at']),
     );
@@ -51,9 +51,9 @@ class BookModel {
       'id': id,
       'title': title,
       'author_id': authorId,
-      'image_path': imagePath,
+      'image_url': imageUrl,
       'category': category.value,
-      'created_at': createdAt.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
     };
   }
 
@@ -62,7 +62,7 @@ class BookModel {
     String? id,
     String? title,
     String? authorId,
-    String? imagePath,
+    String? imageUrl,
     BookCategory? category,
     DateTime? createdAt,
   }) {
@@ -70,7 +70,7 @@ class BookModel {
       id: id ?? this.id,
       title: title ?? this.title,
       authorId: authorId ?? this.authorId,
-      imagePath: imagePath ?? this.imagePath,
+      imageUrl: imageUrl ?? this.imageUrl,
       category: category ?? this.category,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -79,7 +79,7 @@ class BookModel {
   // Method for converting BookModel to string
   @override // override is for debugging or logging
   String toString() {
-    return 'BookModel(id: $id, title: $title, authorId: $authorId, imagePath: $imagePath, category: $category, createdAt: $createdAt)';
+    return 'BookModel(id: $id, title: $title, authorId: $authorId, imageUrl: $imageUrl, category: $category, createdAt: $createdAt)';
   }
 
   // Method for comparing two BookModel objects
@@ -90,7 +90,7 @@ class BookModel {
           id == other.id &&
           title == other.title &&
           authorId == other.authorId &&
-          imagePath == other.imagePath &&
+          imageUrl == other.imageUrl &&
           category == other.category &&
           createdAt == other.createdAt;
 
@@ -99,7 +99,7 @@ class BookModel {
     return id.hashCode ^
         title.hashCode ^
         authorId.hashCode ^
-        imagePath.hashCode ^
+        imageUrl.hashCode ^
         category.hashCode ^
         createdAt.hashCode;
   }

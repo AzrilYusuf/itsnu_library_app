@@ -4,14 +4,13 @@ import 'package:itsnu_app/core/auth_notifier.dart';
 
 class SupabaseUserService {
   /*
-  code: static final SupabaseService _instance = SupabaseService._internal();
-  * Create a single, shared instance of SupabaseService
+  code: static final SupabaseUserService _instance = SupabaseUserService._internal();
+  * Create a single, shared instance of SupabaseUserService
   * _internal is a private constructor. Prevents external code from creating multiple instances directly.
-  code: factory SupabaseService() => _instance;
-  * Any call to SupabaseService() will return the same instance
+  code: factory SupabaseUserService() => _instance;
+  * Any call to SupabaseUserService() will return the same instance
   * Ensures only one instance exists accross the app
   */
-  // Create a single, shared instance of SupabaseService
   static final SupabaseUserService _instance = SupabaseUserService._internal();
   factory SupabaseUserService() => _instance;
   SupabaseUserService._internal();
@@ -23,6 +22,7 @@ class SupabaseUserService {
   SupabaseClient get supabaseClient => _supabaseClient;
   User? get currentUser => _supabaseClient.auth.currentUser;
   bool get isAuthenticated => currentUser != null;
+  Map<String, dynamic>? get currentUserMetaData => currentUser!.userMetadata;
 
   // Register/Sign up user using email and password
   Future<AuthResponse> register(String email, String password) async {
@@ -61,9 +61,6 @@ class SupabaseUserService {
 
   Future<void> updateUserData(Map<String, dynamic> data) async {
     try {
-      final Map<String, dynamic>? currentUserMetaData =
-          currentUser!.userMetadata;
-
       if (currentUser == null) {
         throw Exception('User belum login');
       }
@@ -72,9 +69,12 @@ class SupabaseUserService {
         UserAttributes(
           data: {
             ...?currentUserMetaData,
-            'name': data['name'],
-            'phone': data['phone'],
-            'address': data['address'],
+            // Preventing empty strings from overwriting existing data
+            if (data['name']?.trim().isNotEmpty ?? false) 'name': data['name'],
+            if (data['phone']?.trim().isNotEmpty ?? false)
+              'phone': data['phone'],
+            if (data['address']?.trim().isNotEmpty ?? false)
+              'address': data['address'],
           },
         ),
       );
@@ -126,6 +126,11 @@ class SupabaseUserService {
         throw Exception('User belum login');
       }
 
+        // If image exists, Delete existing image
+      if (currentUserMetaData!['image_url'] != null) {
+        await deleteUserProfilePhoto();
+      }
+
       // Create unique filename for user
       final String fileName =
           '${currentUser!.id}_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -152,9 +157,6 @@ class SupabaseUserService {
   // Update user profile image (in user table)
   Future<void> _updateUserProfilePhoto(String fileUrl) async {
     try {
-      final Map<String, dynamic>? currentUserMetaData =
-          currentUser!.userMetadata;
-
       if (currentUser == null) {
         throw Exception('User belum login');
       }
@@ -174,16 +176,20 @@ class SupabaseUserService {
         throw Exception('User belum login');
       }
 
-      final Map<String, dynamic> user = await _supabaseClient
-          .from('users')
-          .select('image_url')
-          .eq('id', currentUser!.id)
-          .single();
-      final imagePath = user['image_url'];
+      if (currentUserMetaData!['image_url'] == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
 
-      if (imagePath == null) throw Exception('Gambar tidak ditemukan');
+      // Get user profile image url
+      final String imageUrl = currentUserMetaData!['imageUrl'];
+      final String filePath = imageUrl.split('/assets/').last;
 
-      await _supabaseClient.storage.from('assets').remove([imagePath]);
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
+
+      await _supabaseClient.auth.updateUser(
+        UserAttributes(data: {...?currentUserMetaData, 'image_url': null}),
+      );
     } catch (e) {
       throw Exception('Gagal menghapus gambar: $e');
     }
