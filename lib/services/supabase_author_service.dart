@@ -55,10 +55,13 @@ class SupabaseAuthorService {
           .select()
           .single();
       final AuthorModel newAuthor = AuthorModel.fromJson(response);
+      
+      // If fileBytes is not null, upload author image
       if (fileBytes != null) {
         // Upload author image to storage
         await _uploadAuthorImage(fileBytes, newAuthor.id!);
       }
+
       return newAuthor;
     } catch (e) {
       throw Exception('Gagal menambahkan data penulis: $e');
@@ -66,7 +69,7 @@ class SupabaseAuthorService {
   }
 
   // Upload author image to Supabase Storage
-  Future<void> _uploadAuthorImage(Uint8List fileBytes, String authorId) async {
+  Future<bool> _uploadAuthorImage(Uint8List fileBytes, String authorId) async {
     try {
       if (!isAuthenticated) {
         throw Exception('User belum login');
@@ -79,9 +82,13 @@ class SupabaseAuthorService {
       final String filePath = 'author-profile-images/$fileName';
 
       // Upload file to 'assets' bucket
-      await _supabaseClient.storage
+      final String res = await _supabaseClient.storage
           .from('assets')
           .uploadBinary(filePath, fileBytes);
+
+      if (res.isEmpty) {
+        throw Exception('Upload gagal: Gagal mengunggah gambar ke server');
+      }
 
       // Get file URL
       final String fileUrl = _supabaseClient.storage
@@ -90,6 +97,8 @@ class SupabaseAuthorService {
 
       // Update author image_url in database
       await _updateAuthorImage(authorId, fileUrl);
+
+      return true;
     } catch (e) {
       throw Exception('Gagal upload gambar: $e');
     }
@@ -102,10 +111,17 @@ class SupabaseAuthorService {
         throw Exception('User belum login');
       }
 
-      await _supabaseClient
+      final Map<String, dynamic> res = await _supabaseClient
           .from('authors')
           .update({'image_url': fileUrl})
-          .eq('id', authorId);
+          .eq('id', authorId)
+          .select()
+          .single();
+
+      // If res is null then throw exception
+      if (res.isEmpty || res['image_url'] == fileUrl) {
+        throw Exception('Update gagal: Gagal memperbarui URL gambar penulis');
+      }
     } catch (e) {
       throw Exception('Gagal menyimpan gambar: $e');
     }
@@ -123,12 +139,13 @@ class SupabaseAuthorService {
 
       // If new image is provided, upload it
       if (fileBytes != null) {
-        if (author.imageUrl != null) {
+        final res = await _uploadAuthorImage(fileBytes, author.id!);
+
+        if (author.imageUrl != null && res) {
           // Delete existing image
-          await deleteAuthorImage(author.id!);
+          await _deleteAuthorImageFromBucketOnly(author.id!);
         }
         // Upload author image to storage
-        await _uploadAuthorImage(fileBytes, author.id!);
       }
 
       // Preventing empty strings from being updated
@@ -144,6 +161,7 @@ class SupabaseAuthorService {
     }
   }
 
+  // Delete author image from Supabase Storage and update database
   Future<void> deleteAuthorImage(String authorId) async {
     try {
       if (!isAuthenticated) {
@@ -168,6 +186,30 @@ class SupabaseAuthorService {
           .from('authors')
           .update({'image_url': null})
           .eq('id', authorId);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
+    }
+  }
+
+  // Delete author image from Supabase Storage only (without updating database)
+  Future<void> _deleteAuthorImageFromBucketOnly(String authorId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Get author data
+      final AuthorModel author = await getAuthorById(authorId);
+      if (author.imageUrl == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
+
+      // Get author image url
+      final String imageUrl = author.imageUrl!;
+      final String filePath = imageUrl.split('/assets/').last;
+
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
     } catch (e) {
       throw Exception('Gagal menghapus gambar: $e');
     }
