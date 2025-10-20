@@ -127,6 +127,7 @@ class SupabaseAuthorService {
     }
   }
 
+  // Update Author data with optional image update
   Future<void> updateAuthor(AuthorModel author, Uint8List? fileBytes) async {
     try {
       if (!isAuthenticated) {
@@ -139,13 +140,13 @@ class SupabaseAuthorService {
 
       // If new image is provided, upload it
       if (fileBytes != null) {
+        // Upload author image to storage
         final res = await _uploadAuthorImage(fileBytes, author.id!);
 
         if (author.imageUrl != null && res) {
           // Delete existing image
           await _deleteAuthorImageFromBucketOnly(author.id!);
         }
-        // Upload author image to storage
       }
 
       // Preventing empty strings from being updated
@@ -158,6 +159,30 @@ class SupabaseAuthorService {
       await _supabaseClient.from('authors').update(data).eq('id', author.id!);
     } catch (e) {
       throw Exception('Gagal update data penulis: $e');
+    }
+  }
+
+  // Delete author image from Supabase Storage only (without updating database)
+  Future<void> _deleteAuthorImageFromBucketOnly(String authorId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Get author data
+      final AuthorModel author = await getAuthorById(authorId);
+      if (author.imageUrl == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
+
+      // Get author image url
+      final String imageUrl = author.imageUrl!;
+      final String filePath = imageUrl.split('/assets/').last;
+
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
     }
   }
 
@@ -191,33 +216,15 @@ class SupabaseAuthorService {
     }
   }
 
-  // Delete author image from Supabase Storage only (without updating database)
-  Future<void> _deleteAuthorImageFromBucketOnly(String authorId) async {
+  // Delete Author data along with image from storage
+  Future<void> deleteAuthor(String id) async {
     try {
       if (!isAuthenticated) {
         throw Exception('User belum login');
       }
 
-      // Get author data
-      final AuthorModel author = await getAuthorById(authorId);
-      if (author.imageUrl == null) {
-        throw Exception('Tidak ada gambar untuk dihapus');
-      }
-
-      // Get author image url
-      final String imageUrl = author.imageUrl!;
-      final String filePath = imageUrl.split('/assets/').last;
-
-      // Delete image from storage
-      await _supabaseClient.storage.from('assets').remove([filePath]);
-    } catch (e) {
-      throw Exception('Gagal menghapus gambar: $e');
-    }
-  }
-
-  Future<void> deleteAuthor(String id) async {
-    try {
       await _supabaseClient.from('authors').delete().eq('id', id);
+      await deleteAuthorImage(id);
     } catch (e) {
       throw Exception('Gagal menghapus data penulis: $e');
     }

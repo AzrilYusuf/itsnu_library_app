@@ -121,4 +121,110 @@ class SupabaseBookService {
       throw Exception('Gagal memperbarui gambar buku: $e');
     }
   }
+
+  // Update Book data with optional image update
+  Future<void> updateBook(BookModel book, Uint8List? fileBytes) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      if (book.id == null) {
+        throw Exception('ID buku tidak ditemukan');
+      }
+
+      // If new image is provided, upload it
+      if (fileBytes != null) {
+        // Upload book image to storage
+        final res = await _uploadBookImage(fileBytes, book.id!);
+
+        if (book.imageUrl != null && res) {
+          // Delete existing image
+          await _deleteBookImageFromBucketOnly(book.id!);
+        }
+      }
+
+      // Preventing empty strings from being updated
+      final Map<String, dynamic> data = {
+        if (book.title.trim().isNotEmpty) 'title': book.title,
+        if (book.authorId.trim().isNotEmpty) 'author_id': book.authorId,
+        if (book.category.name.trim().isNotEmpty)
+          'category': book.category.name,
+        if (book.createdAt != null)
+          'created_at': book.createdAt!.toIso8601String(),
+      };
+
+      await _supabaseClient.from('books').update(data).eq('id', book.id!);
+    } catch (e) {
+      throw Exception('Gagal update data buku: $e');
+    }
+  }
+
+  // Delete Book image from Supabase Storage only (without updating database)
+  Future<void> _deleteBookImageFromBucketOnly(String bookId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Get author data
+      final BookModel book = await getBookById(bookId);
+      if (book.imageUrl == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
+
+      // Get author image url
+      final String imageUrl = book.imageUrl!;
+      final String filePath = imageUrl.split('/assets/').last;
+
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
+    }
+  }
+
+  // Delete book image from Supabase Storage and update database
+  Future<void> deleteBookImage(String bookId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      // Get book data
+      final BookModel book = await getBookById(bookId);
+      if (book.imageUrl == null) {
+        throw Exception('Tidak ada gambar untuk dihapus');
+      }
+
+      // Get book image url
+      final String imageUrl = book.imageUrl!;
+      final String filePath = imageUrl.split('/assets/').last;
+
+      // Delete image from storage
+      await _supabaseClient.storage.from('assets').remove([filePath]);
+
+      // Update book image_url in database to null
+      await _supabaseClient
+          .from('books')
+          .update({'image_url': null})
+          .eq('id', bookId);
+    } catch (e) {
+      throw Exception('Gagal menghapus gambar: $e');
+    }
+  }
+
+  // Delete Book data along with image from storage
+  Future<void> deleteBook(String id) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      await _supabaseClient.from('books').delete().eq('id', id);
+      await deleteBookImage(id);
+    } catch (e) {
+      throw Exception('Gagal menghapus data buku: $e');
+    }
+  }
 }
