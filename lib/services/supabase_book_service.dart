@@ -123,7 +123,7 @@ class SupabaseBookService {
   }
 
   // Update Book data with optional image update
-  Future<void> updateBook(BookModel book, Uint8List? fileBytes) async {
+  Future<BookModel> updateBook(BookModel book, Uint8List? fileBytes) async {
     try {
       if (!isAuthenticated) {
         throw Exception('User belum login');
@@ -154,7 +154,14 @@ class SupabaseBookService {
           'created_at': book.createdAt!.toIso8601String(),
       };
 
-      await _supabaseClient.from('books').update(data).eq('id', book.id!);
+      final Map<String, dynamic> response = await _supabaseClient
+          .from('books')
+          .update(data)
+          .eq('id', book.id!)
+          .select()
+          .single();
+      
+      return BookModel.fromJson(response);
     } catch (e) {
       throw Exception('Gagal update data buku: $e');
     }
@@ -221,8 +228,8 @@ class SupabaseBookService {
         throw Exception('User belum login');
       }
 
-      await _supabaseClient.from('books').delete().eq('id', id);
       await deleteBookImage(id);
+      await _supabaseClient.from('books').delete().eq('id', id);
     } catch (e) {
       throw Exception('Gagal menghapus data buku: $e');
     }

@@ -20,6 +20,7 @@ class AuthorProvider extends ChangeNotifier {
   Future<void> fetchAuthors() async {
     _setLoading(true);
     clearError();
+
     try {
       _authors = await _authorService.getAuthors();
       notifyListeners();
@@ -31,17 +32,23 @@ class AuthorProvider extends ChangeNotifier {
   }
 
   Future<AuthorModel?> getAuthorById(String id) async {
+    _setLoading(true);
+    clearError();
+    
     try {
       return await _authorService.getAuthorById(id);
     } catch (e) {
       _setError(e.toString());
       return null;
+    } finally {
+      _setLoading(false);
     }
   }
 
   Future<bool> createAuthor(AuthorModel author, Uint8List? fileBytes) async {
     _setLoading(true);
     clearError();
+    
     try {
       final AuthorModel newAuthor = await _authorService.addAuthor(
         author,
@@ -49,6 +56,51 @@ class AuthorProvider extends ChangeNotifier {
       );
       _authors.insert(0, newAuthor); // Insert at the beginning of the list
       notifyListeners();
+      return true;
+    } catch (e) {
+      _setError(e.toString());
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<bool> updateAuthor(AuthorModel author, Uint8List? fileBytes) async {
+    _setLoading(true);
+    clearError();
+    
+    try {
+      final AuthorModel updatedAuthor = await _authorService.updateAuthor(
+        author,
+        fileBytes,
+      );
+      // Search for the author in the list and update it
+      final index = _authors.indexWhere((a) => a.id == updatedAuthor.id);
+      // If found, update the author in the list
+      if (index != -1) {
+        _authors[index] = updatedAuthor;
+        notifyListeners();
+      }
+
+      return true;
+    } catch (e) {
+      _setError(e.toString());
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<bool> deleteAuthor(String id) async {
+    _setLoading(true);
+    clearError();
+    
+    try {
+      await _authorService.deleteAuthor(id);
+      // Remove the author from the list
+      _authors.removeWhere((a) => a.id == id);
+      notifyListeners();
+      
       return true;
     } catch (e) {
       _setError(e.toString());

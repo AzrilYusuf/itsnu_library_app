@@ -55,7 +55,7 @@ class SupabaseAuthorService {
           .select()
           .single();
       final AuthorModel newAuthor = AuthorModel.fromJson(response);
-      
+
       // If fileBytes is not null, upload author image
       if (fileBytes != null) {
         // Upload author image to storage
@@ -128,7 +128,10 @@ class SupabaseAuthorService {
   }
 
   // Update Author data with optional image update
-  Future<void> updateAuthor(AuthorModel author, Uint8List? fileBytes) async {
+  Future<AuthorModel> updateAuthor(
+    AuthorModel author,
+    Uint8List? fileBytes,
+  ) async {
     try {
       if (!isAuthenticated) {
         throw Exception('User belum login');
@@ -156,7 +159,14 @@ class SupabaseAuthorService {
         //   'image_url': author.imageUrl,
       };
 
-      await _supabaseClient.from('authors').update(data).eq('id', author.id!);
+      final Map<String, dynamic> response = await _supabaseClient
+          .from('authors')
+          .update(data)
+          .eq('id', author.id!)
+          .select()
+          .single();
+
+      return AuthorModel.fromJson(response);
     } catch (e) {
       throw Exception('Gagal update data penulis: $e');
     }
@@ -223,8 +233,8 @@ class SupabaseAuthorService {
         throw Exception('User belum login');
       }
 
-      await _supabaseClient.from('authors').delete().eq('id', id);
       await deleteAuthorImage(id);
+      await _supabaseClient.from('authors').delete().eq('id', id);
     } catch (e) {
       throw Exception('Gagal menghapus data penulis: $e');
     }
