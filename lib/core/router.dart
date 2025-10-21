@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:itsnu_app/core/auth_notifier.dart';
 import 'package:itsnu_app/models/author_model.dart';
+import 'package:itsnu_app/models/book_model.dart';
 import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/author_form_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
+import 'package:itsnu_app/screens/books_screen/book_form_screen.dart';
 import 'package:itsnu_app/screens/books_screen/books_screen.dart';
 import 'package:itsnu_app/screens/category_screen/category_screen.dart';
 import 'package:itsnu_app/screens/home_screen/home_screen.dart';
@@ -87,7 +89,6 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                     path: '/form',
                     name: 'authorForm',
                     builder: (context, state) {
-                      // You can extract parameters from state if needed
                       final author = state.extra as AuthorModel?;
                       return AuthorFormScreen(author: author);
                     },
@@ -104,6 +105,17 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                 path: '/books',
                 name: 'books',
                 builder: (context, state) => const BooksScreen(),
+
+                routes: [
+                  GoRoute(
+                    path: '/form',
+                    name: 'bookForm',
+                    builder: (context, state) {
+                      final book = state.extra as BookModel?;
+                      return BookFormScreen(book: book);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

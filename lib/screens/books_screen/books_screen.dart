@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:itsnu_app/providers/book_provider.dart';
 
-class BooksScreen extends StatelessWidget {
+class BooksScreen extends StatefulWidget {
   const BooksScreen({super.key});
 
-  // Data dummy untuk daftar buku
-  final List<Map<String, String>> daftarBuku = const [
-    {"judul": "Flutter untuk Pemula", "penulis": "Andi Setiawan", "imgId": "1"},
-    {"judul": "Seni Berbicara", "penulis": "Budi Santoso", "imgId": "2"},
-    {"judul": "Mastering Dart", "penulis": "Citra Lestari", "imgId": "3"},
-    {"judul": "Kisah di Balik Awan", "penulis": "Dewi Anggraini", "imgId": "4"},
-    {"judul": "Manajemen Waktu", "penulis": "Eko Prasetyo", "imgId": "6"},
-  ];
+  @override
+  State<BooksScreen> createState() => _BooksScreenState();
+}
+
+class _BooksScreenState extends State<BooksScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Run code after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadData() async {
+    final bookProvider = Provider.of<BookProvider>(context, listen: false);
+
+    await bookProvider.fetchBooks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,27 +38,37 @@ class BooksScreen extends StatelessWidget {
         title: const Text("Buku Populer"),
         backgroundColor: Colors.teal,
       ),
-      body: ListView.builder(
-        itemCount: daftarBuku.length,
-        itemBuilder: (context, index) {
-          final buku = daftarBuku[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "https://picsum.photos/id/${buku['imgId']}/200/200",
+      body: Consumer<BookProvider>(
+        builder: (context, bookProvider, child) {
+          return ListView.builder(
+            itemCount: bookProvider.books.length,
+            itemBuilder: (context, index) {
+              final book = bookProvider.books[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(book.imageUrl!),
+                  ),
+                  title: Text(book.title),
+                  subtitle: Text("Penulis: ${book.authorId}"),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Aksi ketika item di-tap
+                  },
                 ),
-              ),
-              title: Text(buku['judul']!),
-              subtitle: Text("Penulis: ${buku['penulis']!}"),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Aksi ketika item di-tap
-              },
-            ),
+              );
+            },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).go('/books/form');
+        },
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }
