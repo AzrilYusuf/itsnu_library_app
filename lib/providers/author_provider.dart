@@ -31,6 +31,20 @@ class AuthorProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchAllAuthorsName() async {
+    _setLoading(true);
+    clearError();
+
+    try {
+      _authors = await _authorService.getAllAuthorsName();
+      notifyListeners();
+    } catch (e) {
+      _setError(e.toString());
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   Future<AuthorModel?> getAuthorById(String id) async {
     _setLoading(true);
     clearError();

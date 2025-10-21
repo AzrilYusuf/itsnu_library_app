@@ -35,7 +35,7 @@ class _BooksScreenState extends State<BooksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Buku Populer"),
+        title: const Text('Daftar Buku'),
         backgroundColor: Colors.teal,
       ),
       body: Consumer<BookProvider>(
@@ -48,13 +48,20 @@ class _BooksScreenState extends State<BooksScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(book.imageUrl!),
+                    backgroundImage: book.imageUrl != null
+                        ? NetworkImage(book.imageUrl!)
+                        : null,
+                    child: book.imageUrl == null
+                        ? const Icon(Icons.book)
+                        : null,
                   ),
                   title: Text(book.title),
-                  subtitle: Text("Penulis: ${book.authorId}"),
+                  subtitle: Text(
+                    'Penulis: ${book.authorName ?? 'Tidak diketahui'}',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    // Aksi ketika item di-tap
+                    GoRouter.of(context).go('/books/form', extra: book);
                   },
                 ),
               );

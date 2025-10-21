@@ -37,12 +37,18 @@ class BookModel {
   // factory constructor is for converting JSON to BookModel
   // NOTE: This is necessary because the API returns JSON
   factory BookModel.fromJson(Map<String, dynamic> json) {
-    final authorData = json['authors'] as Map<String, dynamic>?;
+    final authorRaw = json['authors'];
+    String? authorName;
+
+    if (authorRaw is Map<String, dynamic>) {
+      authorName = authorRaw['name']?.toString();
+    }
+
     return BookModel(
       id: json['id'],
       title: json['title'],
       authorId: json['author_id'],
-      authorName: authorData?['author_name'],
+      authorName: authorName,
       imageUrl: json['image_url'],
       category: BookCategory.fromString(json['category']),
       createdAt: DateTime.parse(json['created_at']),

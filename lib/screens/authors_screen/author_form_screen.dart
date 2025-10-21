@@ -28,7 +28,7 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
   void initState() {
     super.initState();
     if (_isEditMode) {
-      _nameController.text = widget.author?.name ?? '';
+      _nameController.text = widget.author!.name;
       _currentPhotoUrl = widget.author!.imageUrl;
     }
   }
@@ -213,112 +213,71 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
         title: Text(_isEditMode ? 'Edit Penulis' : 'Tambah Penulis'),
         backgroundColor: Colors.teal,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // If editing, show current photo or selected photo
-              if (_isEditMode || _selectedImageBytes != null) ...[
-                Center(
-                  child: CircleAvatar(
-                    radius: 100,
-                    backgroundImage: _currentPhotoUrl != null
-                        ? NetworkImage(_currentPhotoUrl!)
-                        : (_selectedImageBytes != null
-                              ? MemoryImage(_selectedImageBytes!)
-                              : null),
-                    child: null,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // If editing, show current photo or selected photo
+                if (_isEditMode || _selectedImageBytes != null) ...[
+                  Center(
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundImage: _currentPhotoUrl != null
+                          ? NetworkImage(_currentPhotoUrl!)
+                          : (_selectedImageBytes != null
+                                ? MemoryImage(_selectedImageBytes!)
+                                : null),
+                      child: null,
+                    ),
                   ),
+
+                  const SizedBox(height: 16.0),
+                ],
+
+                TextFormField(
+                  controller: _nameController,
+                  enabled: !_isLoading, // Disable when loading
+                  decoration: const InputDecoration(
+                    labelText: 'Nama Penulis',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Nama penulis wajib diisi.';
+                    }
+                    if (value.trim().length < 3) {
+                      return 'Nama penulis minimal 3 karakter.';
+                    }
+                    return null;
+                  },
                 ),
 
                 const SizedBox(height: 16.0),
-              ],
 
-              TextFormField(
-                controller: _nameController,
-                enabled: !_isLoading, // Disable when loading
-                decoration: const InputDecoration(
-                  labelText: 'Nama Penulis',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Nama penulis wajib diisi.';
-                  }
-                  if (value.trim().length < 3) {
-                    return 'Nama penulis minimal 3 karakter.';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 16.0),
-
-              // Upload Author Photo Button
-              ElevatedButton.icon(
-                onPressed: _isLoading ? null : _selectImage,
-                icon: const Icon(Icons.photo_camera),
-                label: const Text('Unggah Foto Penulis'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-
-              const SizedBox(height: 24.0),
-              // Save Button
-              SizedBox(
-                height: 48.0,
-
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _saveAuthor,
+                // Upload Author Photo Button
+                ElevatedButton.icon(
+                  onPressed: _isLoading ? null : _selectImage,
+                  icon: const Icon(Icons.photo_camera),
+                  label: const Text('Unggah Foto Penulis'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
                     foregroundColor: Colors.white,
                   ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
-                        )
-                      : Text(_isEditMode ? 'Update Penulis' : 'Simpan Penulis'),
                 ),
-              ),
 
-              const SizedBox(height: 12.0),
-
-              // Cancel Button
-              SizedBox(
-                height: 48.0,
-                child: OutlinedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () {
-                          Navigator.of(context).pop();
-                        },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                    side: const BorderSide(color: Colors.teal),
-                  ),
-                  child: const Text('Batal'),
-                ),
-              ),
-
-              if (_isEditMode) ...[
-                const SizedBox(height: 12.0),
-
-                // Delete Button
+                const SizedBox(height: 24.0),
+                // Save Button
                 SizedBox(
                   height: 48.0,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _deleteAuthor,
+                    onPressed: _isLoading ? null : _saveAuthor,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.teal,
                       foregroundColor: Colors.white,
                     ),
                     child: _isLoading
@@ -327,11 +286,55 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                               Colors.white,
                             ),
                           )
-                        : const Text('Hapus Penulis'),
+                        : Text(
+                            _isEditMode ? 'Update Penulis' : 'Simpan Penulis',
+                          ),
                   ),
                 ),
+
+                const SizedBox(height: 12.0),
+
+                // Cancel Button
+                SizedBox(
+                  height: 48.0,
+                  child: OutlinedButton(
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            Navigator.of(context).pop();
+                          },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.teal,
+                      side: const BorderSide(color: Colors.teal),
+                    ),
+                    child: const Text('Batal'),
+                  ),
+                ),
+
+                if (_isEditMode) ...[
+                  const SizedBox(height: 12.0),
+
+                  // Delete Button
+                  SizedBox(
+                    height: 48.0,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _deleteAuthor,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            )
+                          : const Text('Hapus Penulis'),
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
