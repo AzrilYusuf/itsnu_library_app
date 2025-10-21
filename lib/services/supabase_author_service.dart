@@ -17,11 +17,11 @@ class SupabaseAuthorService {
 
   Future<List<AuthorModel>> getAuthors() async {
     try {
-      final List<Map<String, dynamic>> authors = await _supabaseClient
+      final List<Map<String, dynamic>> response = await _supabaseClient
           .from('authors')
           .select()
           .order('name', ascending: true);
-      return authors.map((author) => AuthorModel.fromJson(author)).toList();
+      return response.map((res) => AuthorModel.fromJson(res)).toList();
     } catch (e) {
       throw Exception('Gagal mengambil data penulis: $e');
     }
@@ -29,12 +29,12 @@ class SupabaseAuthorService {
 
   Future<AuthorModel> getAuthorById(String id) async {
     try {
-      final Map<String, dynamic> author = await _supabaseClient
+      final Map<String, dynamic> response = await _supabaseClient
           .from('authors')
           .select()
           .eq('id', id)
           .single();
-      return AuthorModel.fromJson(author);
+      return AuthorModel.fromJson(response);
     } catch (e) {
       throw Exception('Gagal mengambil data penulis: $e');
     }

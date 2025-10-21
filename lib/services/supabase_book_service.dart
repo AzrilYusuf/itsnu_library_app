@@ -16,11 +16,19 @@ class SupabaseBookService {
 
   Future<List<BookModel>> getBooks() async {
     try {
-      final List<Map<String, dynamic>> books = await _supabaseClient
+      final response = await _supabaseClient
           .from('books')
-          .select()
+          .select(
+            'id, title, author_id, category, image_url, created_at, authors(name)',
+          )
           .order('created_at', ascending: false);
-      return books.map((book) => BookModel.fromJson(book)).toList();
+
+      final rows = response as List<dynamic>;
+
+      // Converting each Map is safer than forcing List<Map<String,dynamic>>
+      return rows
+          .map((r) => BookModel.fromJson(Map<String, dynamic>.from(r as Map)))
+          .toList();
     } catch (e) {
       throw Exception('Gagal mengambil data buku: $e');
     }
@@ -28,12 +36,16 @@ class SupabaseBookService {
 
   Future<BookModel> getBookById(String id) async {
     try {
-      final Map<String, dynamic> book = await _supabaseClient
+      final response = await _supabaseClient
           .from('books')
-          .select()
+          .select(
+            'id, title, author_id, category, image_url, created_at, authors(name)',
+          )
           .eq('id', id)
           .single();
-      return BookModel.fromJson(book);
+
+      // Converting each Map is safer than forcing List<Map<String,dynamic>>
+      return BookModel.fromJson(Map<String, dynamic>.from(response));
     } catch (e) {
       throw Exception('Gagal mengambil data buku: $e');
     }

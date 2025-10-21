@@ -19,6 +19,7 @@ class BookModel {
   final String? id;
   final String title;
   final String authorId;
+  final String? authorName;
   final String? imageUrl;
   final BookCategory category;
   final DateTime? createdAt;
@@ -27,6 +28,7 @@ class BookModel {
     this.id,
     required this.title,
     required this.authorId,
+    this.authorName,
     this.imageUrl,
     required this.category,
     this.createdAt,
@@ -35,10 +37,12 @@ class BookModel {
   // factory constructor is for converting JSON to BookModel
   // NOTE: This is necessary because the API returns JSON
   factory BookModel.fromJson(Map<String, dynamic> json) {
+    final authorData = json['authors'] as Map<String, dynamic>?;
     return BookModel(
       id: json['id'],
       title: json['title'],
       authorId: json['author_id'],
+      authorName: authorData?['author_name'],
       imageUrl: json['image_url'],
       category: BookCategory.fromString(json['category']),
       createdAt: DateTime.parse(json['created_at']),
@@ -79,7 +83,7 @@ class BookModel {
   // Method for converting BookModel to string
   @override // override is for debugging or logging
   String toString() {
-    return 'BookModel(id: $id, title: $title, authorId: $authorId, imageUrl: $imageUrl, category: $category, createdAt: $createdAt)';
+    return 'BookModel(id: $id, title: $title, authorId: $authorId, authorName: $authorName, imageUrl: $imageUrl, category: $category, createdAt: $createdAt)';
   }
 
   // Method for comparing two BookModel objects
@@ -90,6 +94,7 @@ class BookModel {
           id == other.id &&
           title == other.title &&
           authorId == other.authorId &&
+          authorName == other.authorName &&
           imageUrl == other.imageUrl &&
           category == other.category &&
           createdAt == other.createdAt;
@@ -99,6 +104,7 @@ class BookModel {
     return id.hashCode ^
         title.hashCode ^
         authorId.hashCode ^
+        authorName.hashCode ^
         imageUrl.hashCode ^
         category.hashCode ^
         createdAt.hashCode;
