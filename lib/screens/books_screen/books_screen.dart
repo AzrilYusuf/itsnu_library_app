@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:itsnu_app/models/book_model.dart';
 import 'package:provider/provider.dart';
 import 'package:itsnu_app/providers/book_provider.dart';
 
@@ -26,7 +27,7 @@ class _BooksScreenState extends State<BooksScreen> {
   }
 
   Future<void> _loadData() async {
-    final bookProvider = Provider.of<BookProvider>(context, listen: false);
+    final BookProvider bookProvider = Provider.of<BookProvider>(context, listen: false);
 
     await bookProvider.fetchBooks();
   }
@@ -43,7 +44,7 @@ class _BooksScreenState extends State<BooksScreen> {
           return ListView.builder(
             itemCount: bookProvider.books.length,
             itemBuilder: (context, index) {
-              final book = bookProvider.books[index];
+              final BookModel book = bookProvider.books[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(

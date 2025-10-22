@@ -111,7 +111,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
     });
 
     try {
-      final bookProvider = Provider.of<BookProvider>(context, listen: false);
+      final BookProvider bookProvider = Provider.of<BookProvider>(context, listen: false);
 
       // Create or update book
       final BookModel newBook = BookModel(
