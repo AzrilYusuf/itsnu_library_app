@@ -6,6 +6,7 @@ import 'package:itsnu_app/models/book_model.dart';
 import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/author_form_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
+import 'package:itsnu_app/screens/books_screen/book_detail_screen.dart';
 import 'package:itsnu_app/screens/books_screen/book_form_screen.dart';
 import 'package:itsnu_app/screens/books_screen/books_screen.dart';
 import 'package:itsnu_app/screens/category_screen/category_screen.dart';
@@ -111,8 +112,18 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                     path: '/form',
                     name: 'bookForm',
                     builder: (context, state) {
-                      final book = state.extra as BookModel?;
+                      final book =
+                          state.extra
+                              as BookModel?; // add ? cause BookModel in book_form_screen can be null
                       return BookFormScreen(book: book);
+                    },
+                  ),
+                  GoRoute(
+                    path: '/detail',
+                    name: 'bookDetail',
+                    builder: (context, state) {
+                      final book = state.extra as BookModel;
+                      return BookDetailScreen(book: book);
                     },
                   ),
                 ],
