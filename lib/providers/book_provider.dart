@@ -33,7 +33,7 @@ class BookProvider extends ChangeNotifier {
   Future<BookModel?> getBookById(String id) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       return await _bookService.getBookById(id);
     } catch (e) {
@@ -47,13 +47,12 @@ class BookProvider extends ChangeNotifier {
   Future<bool> createBook(BookModel book, Uint8List? fileBytes) async {
     _setLoading(true);
     clearError();
-    
+
     try {
-      final BookModel newBook = await _bookService.addBook(
-        book,
-        fileBytes,
-      );
+      final BookModel newBook = await _bookService.addBook(book, fileBytes);
+      
       _books.insert(0, newBook); // Insert at the beginning of the list
+      
       notifyListeners();
       return true;
     } catch (e) {
@@ -67,7 +66,7 @@ class BookProvider extends ChangeNotifier {
   Future<bool> updateBook(BookModel book, Uint8List? fileBytes) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       final BookModel updatedBook = await _bookService.updateBook(
         book,
@@ -75,6 +74,7 @@ class BookProvider extends ChangeNotifier {
       );
       // Search for the book in the list and update it
       final index = _books.indexWhere((a) => a.id == updatedBook.id);
+
       // If found, update the book in the list
       if (index != -1) {
         _books[index] = updatedBook;
@@ -93,13 +93,13 @@ class BookProvider extends ChangeNotifier {
   Future<bool> deleteBook(String id) async {
     _setLoading(true);
     clearError();
-    
+
     try {
       await _bookService.deleteBook(id);
       // Remove the book from the list
       _books.removeWhere((a) => a.id == id);
       notifyListeners();
-      
+
       return true;
     } catch (e) {
       _setError(e.toString());

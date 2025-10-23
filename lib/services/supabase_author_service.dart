@@ -27,18 +27,6 @@ class SupabaseAuthorService {
     }
   }
 
-  Future<List<AuthorModel>> getAllAuthorsName() async {
-    try {
-      final List<Map<String, dynamic>> response = await _supabaseClient
-          .from('authors')
-          .select('id, name')
-          .order('name', ascending: true);
-      return response.map((res) => AuthorModel.fromJson(res)).toList();
-    } catch (e) {
-      throw Exception('Gagal mengambil data penulis: $e');
-    }
-  }
-
   Future<AuthorModel> getAuthorById(String id) async {
     try {
       final Map<String, dynamic> response = await _supabaseClient

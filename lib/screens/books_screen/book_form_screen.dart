@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:itsnu_app/models/author_model.dart';
 import 'package:itsnu_app/models/book_model.dart';
 import 'package:itsnu_app/providers/author_provider.dart';
 import 'package:itsnu_app/providers/book_provider.dart';
@@ -51,9 +52,14 @@ class _BookFormScreenState extends State<BookFormScreen> {
   }
 
   Future<void> _loadData() async {
-    final authorProvider = Provider.of<AuthorProvider>(context, listen: false);
+    final AuthorProvider authorProvider = Provider.of<AuthorProvider>(
+      context,
+      listen: false,
+    );
 
-    await authorProvider.fetchAllAuthorsName();
+    if (authorProvider.authors.isEmpty) {
+      await authorProvider.fetchAuthors();
+    }
   }
 
   // Method to select image from camera or gallery
@@ -111,7 +117,10 @@ class _BookFormScreenState extends State<BookFormScreen> {
     });
 
     try {
-      final BookProvider bookProvider = Provider.of<BookProvider>(context, listen: false);
+      final BookProvider bookProvider = Provider.of<BookProvider>(
+        context,
+        listen: false,
+      );
 
       // Create or update book
       final BookModel newBook = BookModel(
@@ -220,7 +229,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authorProvider = Provider.of<AuthorProvider>(context, listen: true).authors;
+    final List<AuthorModel> authors = Provider.of<AuthorProvider>(
+      context,
+    ).authors; // listen: true
 
     return Scaffold(
       appBar: AppBar(
@@ -274,13 +285,15 @@ class _BookFormScreenState extends State<BookFormScreen> {
 
                 // Author dropdown
                 DropdownButtonFormField<String>(
-                  initialValue: _isEditMode ? widget.book!.authorId : _selectedAuthorId,
+                  initialValue: _isEditMode
+                      ? widget.book!.authorId
+                      : _selectedAuthorId,
                   decoration: InputDecoration(
                     labelText: 'Pilih Penulis',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (v) => setState(() => _selectedAuthorId = v),
-                  items: authorProvider
+                  items: authors
                       .map(
                         (a) =>
                             DropdownMenuItem(value: a.id, child: Text(a.name)),

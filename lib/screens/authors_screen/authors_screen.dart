@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:itsnu_app/models/author_model.dart';
 import 'package:provider/provider.dart';
 import 'package:itsnu_app/providers/author_provider.dart';
 
@@ -28,7 +29,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   Future<void> _loadData() async {
     final authorProvider = Provider.of<AuthorProvider>(context, listen: false);
 
-    await authorProvider.fetchAuthors();
+    if (authorProvider.authors.isEmpty) {
+      await authorProvider.fetchAuthors();
+    }
   }
 
   @override
@@ -51,7 +54,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                     child: Text('Error: ${authorProvider.errorMessage}'),
                   );
                 } else {
-                  final authors = authorProvider.authors;
+                  final List<AuthorModel> authors = authorProvider.authors;
                   return GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(

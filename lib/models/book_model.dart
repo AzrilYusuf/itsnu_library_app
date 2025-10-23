@@ -19,7 +19,7 @@ class BookModel {
   final String? id;
   final String title;
   final String authorId;
-  final String? authorName;
+  String? authorName;
   final String? imageUrl;
   final BookCategory category;
   final DateTime? createdAt;

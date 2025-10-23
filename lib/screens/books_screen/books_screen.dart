@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:itsnu_app/models/author_model.dart';
 import 'package:itsnu_app/models/book_model.dart';
+import 'package:itsnu_app/providers/author_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:itsnu_app/providers/book_provider.dart';
 
@@ -27,13 +29,21 @@ class _BooksScreenState extends State<BooksScreen> {
   }
 
   Future<void> _loadData() async {
-    final BookProvider bookProvider = Provider.of<BookProvider>(context, listen: false);
+    final BookProvider bookProvider = Provider.of<BookProvider>(
+      context,
+      listen: false,
+    );
 
     await bookProvider.fetchBooks();
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<AuthorModel> authors = Provider.of<AuthorProvider>(
+      context,
+      listen: false,
+    ).authors;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Buku'),
@@ -58,7 +68,10 @@ class _BooksScreenState extends State<BooksScreen> {
                   ),
                   title: Text(book.title),
                   subtitle: Text(
-                    'Penulis: ${book.authorName ?? 'Tidak diketahui'}',
+                    'Penulis: ${book.authorName ?? authors.firstWhere(
+                          (a) => a.id == book.authorId,
+                          orElse: () => AuthorModel(id: '', name: 'Tidak diketahui'),
+                        ).name}',
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
