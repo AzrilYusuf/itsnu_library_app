@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   GoRouter.of(
                                     context,
-                                  ).go('/authors/form', extra: author);
+                                  ).go('/authors/detail', extra: author);
                                 },
 
                                 child: Container(

@@ -4,6 +4,7 @@ import 'package:itsnu_app/core/auth_notifier.dart';
 import 'package:itsnu_app/models/author_model.dart';
 import 'package:itsnu_app/models/book_model.dart';
 import 'package:itsnu_app/screens/auth_screen/auth_screen.dart';
+import 'package:itsnu_app/screens/authors_screen/author_detail_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/author_form_screen.dart';
 import 'package:itsnu_app/screens/authors_screen/authors_screen.dart';
 import 'package:itsnu_app/screens/books_screen/book_detail_screen.dart';
@@ -92,6 +93,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
                     builder: (context, state) {
                       final author = state.extra as AuthorModel?;
                       return AuthorFormScreen(author: author);
+                    },
+                  ),
+                  GoRoute(
+                    path: '/detail',
+                    name: 'authorDetail',
+                    builder: (context, state) {
+                      final author = state.extra as AuthorModel;
+                      return AuthorDetailScreen(author: author);
                     },
                   ),
                 ],
