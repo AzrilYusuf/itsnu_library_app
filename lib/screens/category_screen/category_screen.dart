@@ -12,6 +12,7 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  // For each category, track if it's expanded
   final Map<int, bool> _expanded = {};
 
   @override
@@ -74,9 +75,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ...filteredBooks.map(
                         (book) => ListTile(
                           title: Text('Judul: ${book.title}'),
+                          shape: Border(
+                            top: BorderSide(
+                              color: const Color.fromARGB(148, 209, 209, 209),
+                              width: 1,
+                            ),
+                          ),
                           onTap: () => GoRouter.of(
                             context,
                           ).go('/books/detail', extra: book),
+                          leading: CircleAvatar(
+                            backgroundImage: book.imageUrl != null
+                                ? NetworkImage(book.imageUrl!)
+                                : null,
+                            child: book.imageUrl == null
+                                ? const Icon(Icons.book)
+                                : null,
+                          ),
+                          // backgroundColor:
                         ),
                       )
                     else

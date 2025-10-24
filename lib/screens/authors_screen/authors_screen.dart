@@ -56,6 +56,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                 } else {
                   final List<AuthorModel> authors = authorProvider.authors;
                   return GridView.builder(
+                    padding: const EdgeInsets.all(12.0),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -70,7 +71,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                           GoRouter.of(context).go('/authors/form', extra: author);
                         },
                         child: Container(
+                          padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(color: Colors.grey),
                           ),
                           child: Column(
@@ -85,6 +88,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                                     : const Icon(
                                         Icons.person,
                                         size: 50,
+                                        color: Colors.deepPurple,
                                       ),
                               ),
                               Padding(

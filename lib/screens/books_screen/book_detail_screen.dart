@@ -44,8 +44,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     ).authors.firstWhere((author) => author.id == widget.book.authorId);
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.book.title), 
-      backgroundColor: Colors.teal),
+      appBar: AppBar(
+        title: Text(widget.book.title),
+        backgroundColor: Colors.teal,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -53,27 +55,42 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           children: [
             Center(
               child: CircleAvatar(
-                radius: 100.0,
-                backgroundColor: Colors.grey[200],
+                radius: 70.0,
                 backgroundImage: widget.book.imageUrl != null
                     ? NetworkImage(widget.book.imageUrl!)
-                    : AssetImage('assets/images/placeholder.png'),
+                    : null,
                 child: widget.book.imageUrl == null
-                    ? Icon(
-                        Icons.book,
-                        size: 80.0,
-                        color: Colors.grey[800],
-                      )
+                    ? Icon(Icons.book, size: 60.0)
                     : null,
               ),
             ),
 
-            const SizedBox(height: 16),
-            Text('Title: ${widget.book.title}'),
-            const SizedBox(height: 16),
-            Text('Author: ${authors.name}'),
-            const SizedBox(height: 16),
-            Text('Category: ${widget.book.category.name}'),
+            const SizedBox(height: 16.0),
+
+            Text(
+              widget.book.title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30.0,
+              ),
+            ),
+
+            const SizedBox(height: 16.0),
+
+            Text(
+              'Author: ${authors.name}',
+              style: const TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 20.0,
+              ),
+            ),
+
+            const SizedBox(height: 16.0),
+
+            Text(
+              'Category: ${widget.book.category.name}',
+              style: const TextStyle(fontSize: 16.0),
+            ),
             // Add more book details here
           ],
         ),

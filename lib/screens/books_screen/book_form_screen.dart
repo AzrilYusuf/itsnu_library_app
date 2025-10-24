@@ -144,10 +144,11 @@ class _BookFormScreenState extends State<BookFormScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal ${_isEditMode ? 'update' : 'membuat'} buku.'),
+            content: Text('Gagal ${_isEditMode ? 'update' : 'membuat'} buku: ${bookProvider.errorMessage}'),
             backgroundColor: Colors.red,
           ),
         );
+        bookProvider.clearError();
       }
     } catch (e) {
       if (!mounted) return;
@@ -212,6 +213,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        bookProvider.clearError();
       }
     } catch (e) {
       if (!mounted) return;
@@ -250,13 +252,18 @@ class _BookFormScreenState extends State<BookFormScreen> {
                 if (_isEditMode || _selectedImageBytes != null) ...[
                   Center(
                     child: CircleAvatar(
-                      radius: 100,
+                      radius: 60,
                       backgroundImage: _currentImageUrl != null
                           ? NetworkImage(_currentImageUrl!)
                           : (_selectedImageBytes != null
                                 ? MemoryImage(_selectedImageBytes!)
                                 : null),
-                      child: null,
+                      child: _currentImageUrl == null && _selectedImageBytes == null
+                      ? Icon(
+                        Icons.book,
+                        size: 50.0,
+                      )
+                      : null,
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -331,7 +338,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 24.0),
+                const SizedBox(height: 16.0),
 
                 // Save Button
                 SizedBox(

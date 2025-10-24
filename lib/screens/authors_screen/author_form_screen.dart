@@ -120,11 +120,12 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Gagal ${_isEditMode ? 'update' : 'membuat'} penulis.',
+              'Gagal ${_isEditMode ? 'update' : 'membuat'} penulis: ${authorProvider.errorMessage}',
             ),
             backgroundColor: Colors.red,
           ),
         );
+        authorProvider.clearError();
       }
     } catch (e) {
       if (!mounted) return;
@@ -191,6 +192,7 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
             backgroundColor: Colors.red,
           ),
         );
+        authorProvider.clearError();
       }
     } catch (e) {
       if (!mounted) return;
@@ -225,13 +227,17 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                 if (_isEditMode || _selectedImageBytes != null) ...[
                   Center(
                     child: CircleAvatar(
-                      radius: 100,
+                      radius: 70,
                       backgroundImage: _currentPhotoUrl != null
                           ? NetworkImage(_currentPhotoUrl!)
                           : (_selectedImageBytes != null
                                 ? MemoryImage(_selectedImageBytes!)
                                 : null),
-                      child: null,
+                      child:
+                          _currentPhotoUrl == null &&
+                              _selectedImageBytes == null
+                          ? Icon(Icons.person, size: 60)
+                          : null,
                     ),
                   ),
 
@@ -270,7 +276,7 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 24.0),
+                const SizedBox(height: 16.0),
                 // Save Button
                 SizedBox(
                   height: 48.0,

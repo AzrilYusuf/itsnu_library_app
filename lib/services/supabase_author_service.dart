@@ -227,11 +227,38 @@ class SupabaseAuthorService {
     }
   }
 
+  // Check has author got book, and when true return true
+  Future<bool> doesAuthorHaveBook(String authorId) async {
+    try {
+      if (!isAuthenticated) {
+        throw Exception('User belum login');
+      }
+
+      final List<Map<String, dynamic>> res = await _supabaseClient
+          .from('books')
+          .select('id')
+          .eq('author_id', authorId)
+          .limit(1);
+
+      return res.isNotEmpty;
+    } catch (e) {
+      throw Exception('Gagal mengambil data buku: $e');
+    }
+  }
+
   // Delete Author data along with image from storage
   Future<void> deleteAuthor(String id) async {
     try {
       if (!isAuthenticated) {
         throw Exception('User belum login');
+      }
+
+      // Check if author has book
+      final bool hasBook = await doesAuthorHaveBook(id);
+      if (hasBook) {
+        throw Exception(
+          'Penulis masih memiliki buku, silakan hapus dulu bukunya.',
+        );
       }
 
       await deleteAuthorImage(id);
