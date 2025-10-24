@@ -34,6 +34,7 @@ class _BooksScreenState extends State<BooksScreen> {
       listen: false,
     );
 
+    if (bookProvider.books.isNotEmpty) return;
     await bookProvider.fetchBooks();
   }
 
@@ -51,36 +52,45 @@ class _BooksScreenState extends State<BooksScreen> {
       ),
       body: Consumer<BookProvider>(
         builder: (context, bookProvider, child) {
-          return ListView.builder(
-            itemCount: bookProvider.books.length,
-            itemBuilder: (context, index) {
-              final BookModel book = bookProvider.books[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: book.imageUrl != null
-                        ? NetworkImage(book.imageUrl!)
-                        : null,
-                    child: book.imageUrl == null
-                        ? const Icon(Icons.book)
-                        : null,
+          if (bookProvider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (bookProvider.hasError) {
+            return Center(child: Text('Error: ${bookProvider.errorMessage}'));
+          } else {
+            return ListView.builder(
+              itemCount: bookProvider.books.length,
+              itemBuilder: (context, index) {
+                final BookModel book = bookProvider.books[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
                   ),
-                  title: Text(book.title),
-                  subtitle: Text(
-                    'Penulis: ${book.authorName ?? authors.firstWhere(
-                          (a) => a.id == book.authorId,
-                          orElse: () => AuthorModel(id: '', name: 'Tidak diketahui'),
-                        ).name}',
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: book.imageUrl != null
+                          ? NetworkImage(book.imageUrl!)
+                          : null,
+                      child: book.imageUrl == null
+                          ? const Icon(Icons.book)
+                          : null,
+                    ),
+                    title: Text(book.title),
+                    subtitle: Text(
+                      'Penulis: ${book.authorName ?? authors.firstWhere(
+                            (a) => a.id == book.authorId,
+                            orElse: () => AuthorModel(id: '', name: 'Tidak diketahui'),
+                          ).name}',
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      GoRouter.of(context).go('/books/form', extra: book);
+                    },
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    GoRouter.of(context).go('/books/form', extra: book);
-                  },
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(

@@ -29,9 +29,8 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   Future<void> _loadData() async {
     final authorProvider = Provider.of<AuthorProvider>(context, listen: false);
 
-    if (authorProvider.authors.isEmpty) {
-      await authorProvider.fetchAuthors();
-    }
+    if (authorProvider.authors.isNotEmpty) return;
+    await authorProvider.fetchAuthors();
   }
 
   @override
@@ -68,7 +67,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                       final author = authors[index];
                       return GestureDetector(
                         onTap: () {
-                          GoRouter.of(context).go('/authors/form', extra: author);
+                          GoRouter.of(
+                            context,
+                          ).go('/authors/form', extra: author);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
@@ -100,7 +101,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                               ),
                             ],
                           ),
-                        )
+                        ),
                       );
                     },
                   );

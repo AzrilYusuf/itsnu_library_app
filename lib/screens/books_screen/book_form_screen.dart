@@ -57,9 +57,8 @@ class _BookFormScreenState extends State<BookFormScreen> {
       listen: false,
     );
 
-    if (authorProvider.authors.isEmpty) {
-      await authorProvider.fetchAuthors();
-    }
+    if (authorProvider.authors.isNotEmpty) return;
+    await authorProvider.fetchAuthors();
   }
 
   // Method to select image from camera or gallery
@@ -144,7 +143,9 @@ class _BookFormScreenState extends State<BookFormScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal ${_isEditMode ? 'update' : 'membuat'} buku: ${bookProvider.errorMessage}'),
+            content: Text(
+              'Gagal ${_isEditMode ? 'update' : 'membuat'} buku: ${bookProvider.errorMessage}',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -258,12 +259,11 @@ class _BookFormScreenState extends State<BookFormScreen> {
                           : (_selectedImageBytes != null
                                 ? MemoryImage(_selectedImageBytes!)
                                 : null),
-                      child: _currentImageUrl == null && _selectedImageBytes == null
-                      ? Icon(
-                        Icons.book,
-                        size: 50.0,
-                      )
-                      : null,
+                      child:
+                          _currentImageUrl == null &&
+                              _selectedImageBytes == null
+                          ? Icon(Icons.book, size: 50.0)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 16.0),
