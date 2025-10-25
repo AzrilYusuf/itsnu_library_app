@@ -42,9 +42,9 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: navigationShell.currentIndex,
               onTap: (i) => navigationShell.goBranch(i),
-              selectedItemColor: Colors.teal,
+              selectedItemColor: Theme.of(context).colorScheme.secondary,
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.grey[200],
+              backgroundColor: Theme.of(context).colorScheme.primary,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),

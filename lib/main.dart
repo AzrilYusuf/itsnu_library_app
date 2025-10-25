@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:itsnu_app/style.dart';
 import 'package:provider/provider.dart';
 import 'package:itsnu_app/core/router.dart';
 import 'package:itsnu_app/core/auth_notifier.dart';
@@ -68,6 +69,7 @@ class _PerpusITSNUState extends State<PerpusITSNU> {
         routerConfig: _router,
         debugShowCheckedModeBanner: false,
         title: 'Perpustakaan ITSNU',
+        theme: appTheme,
       ),
     );
   }

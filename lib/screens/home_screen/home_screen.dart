@@ -50,26 +50,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PERPUSITS"),
-        backgroundColor: Colors.teal,
+        title: Text(
+          'PERPUSITS',
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsetsDirectional.symmetric(vertical: 16.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Selamat Datang di Perpustakaan ITSNU',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-
-            const SizedBox(height: 16.0),
-
             // Books Collection
             SizedBox(
-              height: 200.0, // required to constrain height
+              height: 230.0, // required to constrain height
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -77,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       'Koleksi Buku',
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8.0),
@@ -105,22 +102,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                   ).go('/books/detail', extra: book);
                                 },
-
+                                
+                                // Book card
                                 child: Container(
                                   width: 100.0,
                                   height: 150.0,
                                   margin: const EdgeInsets.all(6.0),
                                   padding: const EdgeInsets.all(6.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.tertiary,
+                                    borderRadius: BorderRadius.circular(14.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: const Color.fromARGB(
                                           255,
-                                          218,
-                                          218,
-                                          218,
+                                          134,
+                                          87,
+                                          87,
                                         ),
                                         blurRadius: 2,
                                         offset: const Offset(0, 2.0),
@@ -129,13 +129,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Column(
                                     children: [
+                                      // Book image
                                       Container(
-                                        width: 70.0,
-                                        height: 80.0,
+                                        width: 90.0,
+                                        height: 100.0,
                                         decoration: BoxDecoration(
-                                          color: Colors.blue,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
                                           borderRadius: BorderRadius.circular(
-                                            10.0,
+                                            12.0,
                                           ),
                                           // Set background image either from user metadata or default
                                           image: book.imageUrl != null
@@ -148,22 +151,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : null,
                                         ),
                                         child: book.imageUrl == null
-                                            ? Icon(Icons.book, size: 60.0)
+                                            ? Icon(
+                                                Icons.book,
+                                                size: 60.0,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.secondary,
+                                              )
                                             : null,
                                       ),
 
                                       const SizedBox(height: 4.0),
 
+                                      // Book title
                                       Text(
                                         book.title,
                                         textAlign: TextAlign.center,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyMedium,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
 
                                       const SizedBox(height: 2.0),
 
+                                      // Book author
                                       Text(
                                         authors
                                             .firstWhere(
@@ -173,9 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
+                                            .bodySmall!
+                                            .copyWith(
                                               fontStyle: FontStyle.italic,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
                                             ),
                                       ),
                                     ],
@@ -196,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Authors
             SizedBox(
-              height: 160.0, // required to constrain height
+              height: 190.0, // required to constrain height
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -204,9 +224,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       'Penulis',
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 8.0),
 
                   Expanded(
@@ -218,14 +241,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         } else if (authorProvider.hasError) {
                           return Center(
-                            child: Text('Error: ${authorProvider.errorMessage}'),
+                            child: Text(
+                              'Error: ${authorProvider.errorMessage}',
+                            ),
                           );
                         } else {
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: authorProvider.authors.length,
                             itemBuilder: (context, index) {
-                              final AuthorModel author = authorProvider.authors[index];
+                              final AuthorModel author =
+                                  authorProvider.authors[index];
                               return GestureDetector(
                                 onTap: () {
                                   GoRouter.of(
@@ -233,21 +259,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ).go('/authors/detail', extra: author);
                                 },
 
+                                // Author card
                                 child: Container(
                                   width: 100.0,
                                   height: 150.0,
                                   margin: const EdgeInsets.all(6.0),
                                   padding: const EdgeInsets.all(6.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.tertiary,
+                                    borderRadius: BorderRadius.circular(14.0),
                                     boxShadow: [
                                       BoxShadow(
                                         color: const Color.fromARGB(
                                           255,
-                                          218,
-                                          218,
-                                          218,
+                                          134,
+                                          87,
+                                          87,
                                         ),
                                         blurRadius: 2,
                                         offset: const Offset(0, 2.0),
@@ -256,13 +285,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Column(
                                     children: [
+                                      // Author image
                                       Container(
-                                        width: 70.0,
-                                        height: 80.0,
+                                        width: 90.0,
+                                        height: 100.0,
                                         decoration: BoxDecoration(
-                                          color: Colors.blue,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
                                           borderRadius: BorderRadius.circular(
-                                            10.0,
+                                            12.0,
                                           ),
                                           // Set background image either from user metadata or default
                                           image: author.imageUrl != null
@@ -275,18 +307,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : null,
                                         ),
                                         child: author.imageUrl == null
-                                            ? Icon(Icons.person, size: 60.0)
+                                            ? Icon(
+                                                Icons.person,
+                                                size: 60.0,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.secondary,
+                                              )
                                             : null,
                                       ),
 
-                                      const SizedBox(height: 4.0),
-
+                                      const SizedBox(height: 6.0),
+                                      
+                                      // Author name
                                       Text(
                                         author.name,
                                         textAlign: TextAlign.center,
                                         style: Theme.of(
                                           context,
-                                        ).textTheme.bodyMedium,
+                                        ).textTheme.bodySmall!.copyWith(
+                                          color: Theme.of(
+                                            context
+                                          ).colorScheme.secondary,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -304,6 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
     );
   }
 }

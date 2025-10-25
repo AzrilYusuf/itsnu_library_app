@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.tealAccent,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -127,7 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.teal[900],
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
 
@@ -224,7 +224,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _handleSubmit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
                         foregroundColor: Colors.white,
                       ),
                       child: _isLoading
