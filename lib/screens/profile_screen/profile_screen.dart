@@ -59,7 +59,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
 
           TextButton(
-            style: TextButton.styleFrom(backgroundColor: Colors.red),
+            style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             onPressed: () => Navigator.of(
               context,
             ).pop(true), // .pop(true) is used to confirm logout
@@ -91,8 +93,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal keluar: $e'),
-            backgroundColor: Colors.red,
+            content: Text(
+              'Gagal keluar: $e',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
         );
       }
@@ -104,10 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profil Pengguna'),
-        backgroundColor: Colors.teal,
-      ),
+      appBar: AppBar(title: const Text('Profil')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -117,16 +121,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Theme.of(context).colorScheme.tertiary,
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Column(
                 children: [
+                  // Profile Picture
                   Container(
                     width: 80.0,
                     height: 80.0,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(40.0),
                       // Set background image either from user metadata or default
                       image: _userData['image_url'] != null
@@ -137,10 +142,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : null,
                     ),
                     child: _userData['image_url'] == null
-                        ? const Icon(
+                        ? Icon(
                             Icons.person,
                             size: 40.0,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                           )
                         : null,
                   ),
@@ -150,8 +155,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Username or Email
                   Text(
                     _userData['name'] ?? userEmail,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
 
@@ -161,9 +166,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 4),
                     Text(
                       userEmail,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ],
 
@@ -172,9 +177,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 4.0),
                     Text(
                       'Bergabung : ${_formatDate(createdAt!)}',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: Colors.white),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ],
                 ],
@@ -208,19 +213,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ActionButton(
               icon: Icons.edit,
               label: 'Edit Profil',
-              color: Colors.teal,
+              color: Theme.of(context).colorScheme.secondary,
               onPressed: () {
                 GoRouter.of(context).go('/profile/edit');
               },
             ),
 
-            SizedBox(height: 24.0),
+            SizedBox(height: 16.0),
 
             // Log out button
             ActionButton(
               icon: Icons.logout,
               label: 'Keluar',
-              color: Colors.red,
+              color: Theme.of(context).colorScheme.error,
               onPressed: _isLoading ? null : _logOut,
             ),
           ],

@@ -121,8 +121,11 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
           SnackBar(
             content: Text(
               'Gagal ${_isEditMode ? 'update' : 'membuat'} penulis: ${authorProvider.errorMessage}',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
         );
         authorProvider.clearError();
@@ -130,7 +133,15 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        ),
       );
     } finally {
       if (mounted) {
@@ -159,7 +170,10 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+            child: Text(
+              'Hapus',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
           ),
         ],
       ),
@@ -188,8 +202,11 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
           SnackBar(
             content: Text(
               'Gagal menghapus penulis: ${authorProvider.errorMessage}',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
         );
         authorProvider.clearError();
@@ -197,7 +214,15 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        ),
       );
     } finally {
       if (mounted) {
@@ -213,7 +238,6 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Penulis' : 'Tambah Penulis'),
-        backgroundColor: Colors.teal,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -287,9 +311,10 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                       foregroundColor: Colors.white,
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator(
+                        ? CircularProgressIndicator(
+                            strokeWidth: 2.0, // Set the stroke width
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
+                              Theme.of(context).colorScheme.secondary,
                             ),
                           )
                         : Text(
@@ -326,13 +351,14 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _deleteAuthor,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
                       ),
                       child: _isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                          ? CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).colorScheme.secondary,
                               ),
                             )
                           : const Text('Hapus Penulis'),

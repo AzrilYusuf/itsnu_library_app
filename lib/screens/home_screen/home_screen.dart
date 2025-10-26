@@ -49,15 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ).authors; // Listen: true
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'PERPUSITS',
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-      ),
+      appBar: AppBar(title: Text('PERPUS ITSNU')),
       body: SingleChildScrollView(
         padding: const EdgeInsetsDirectional.symmetric(vertical: 16.0),
         child: Column(
@@ -83,8 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Consumer<BookProvider>(
                       builder: (context, bookProvider, child) {
                         if (bookProvider.isLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
                           );
                         } else if (bookProvider.hasError) {
                           return Center(
@@ -102,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                   ).go('/books/detail', extra: book);
                                 },
-                                
+
                                 // Book card
                                 child: Container(
                                   width: 100.0,
@@ -236,8 +233,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Consumer<AuthorProvider>(
                       builder: (context, authorProvider, child) {
                         if (authorProvider.isLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
                           );
                         } else if (authorProvider.hasError) {
                           return Center(
@@ -318,18 +320,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
 
                                       const SizedBox(height: 6.0),
-                                      
+
                                       // Author name
                                       Text(
                                         author.name,
                                         textAlign: TextAlign.center,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodySmall!.copyWith(
-                                          color: Theme.of(
-                                            context
-                                          ).colorScheme.secondary,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
+                                            ),
                                       ),
                                     ],
                                   ),

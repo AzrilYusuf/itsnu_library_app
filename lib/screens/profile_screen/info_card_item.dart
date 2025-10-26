@@ -13,12 +13,15 @@ class InfoCardItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          Text(label, style: Theme.of(
+              context,
+            ).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary),
+          ),
           Text(
             value,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.secondary),
           ),
         ],
       ),

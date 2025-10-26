@@ -53,7 +53,7 @@ class AppLogo extends StatelessWidget {
         colorBlendMode: useColorFilter ? BlendMode.srcIn : null,
         color: useColorFilter ? iconColor : null,
         errorBuilder: (context, error, stackTrace) {
-          return Icon(Icons.book, size: size, color: iconColor ?? Colors.black);
+          return Icon(Icons.book, size: size, color: iconColor ?? Theme.of(context).colorScheme.primary);
         },
       );
     } catch (e) {

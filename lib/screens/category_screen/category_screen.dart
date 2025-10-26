@@ -43,7 +43,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kategori Buku'),
-        backgroundColor: Colors.teal,
       ),
       body: ListView.builder(
         itemCount: BookCategory.values.length,
@@ -57,6 +56,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              color: Theme.of(context).colorScheme.secondaryContainer,
               child: Column(
                 children: [
                   ListTile(
@@ -77,7 +80,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           title: Text('Judul: ${book.title}'),
                           shape: Border(
                             top: BorderSide(
-                              color: const Color.fromARGB(148, 209, 209, 209),
+                              color: const Color(0x93D1D1D1),
                               width: 1,
                             ),
                           ),
@@ -85,11 +88,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             context,
                           ).go('/books/detail', extra: book),
                           leading: CircleAvatar(
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             backgroundImage: book.imageUrl != null
                                 ? NetworkImage(book.imageUrl!)
                                 : null,
                             child: book.imageUrl == null
-                                ? const Icon(Icons.book)
+                                ? Icon(Icons.book, color: Theme.of(context).colorScheme.secondary)
                                 : null,
                           ),
                           // backgroundColor:

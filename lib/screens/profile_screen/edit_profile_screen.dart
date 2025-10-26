@@ -25,7 +25,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
-
   @override
   void initState() {
     super.initState();
@@ -59,18 +58,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final ImageSource? selectedSource = await showDialog<ImageSource>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Pilih sumber foto'),
+          title: Text('Pilih sumber foto'),
+          titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Kamera'),
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Kamera'),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Galeri'),
+                leading: Icon(
+                  Icons.photo_library,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text('Galeri'),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
             ],
@@ -169,7 +181,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final bool result = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Ubah Kata Sandi'),
+        title: Text('Ubah Kata Sandi'),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         content: Form(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -177,9 +193,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: currentPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Kata Sandi Saat Ini',
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  // Focused border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -194,9 +230,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: newPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Kata Sandi Baru',
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  // Focused border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -214,9 +270,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: confirmPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Konfirmasi Kata Sandi',
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ), // Focused border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -234,12 +309,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Batal'),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              )
+            ),
+            child: Text('Batal'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Theme.of(context).colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+            ),
             onPressed: () async {
               try {
-                if (newPasswordController.value != confirmPasswordController.value) {
+                if (newPasswordController.value !=
+                    confirmPasswordController.value) {
                   throw Exception('Konfirmasi kata sandi tidak cocok.');
                 }
 
@@ -254,13 +343,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Gagal ubah kata sandi: $e'),
-                    backgroundColor: Colors.red,
+                    content: Text(
+                      'Gagal ubah kata sandi: $e',
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.errorContainer,
                   ),
                 );
               }
             },
-            child: const Text('Simpan'),
+            child: Text(
+              'Simpan',
+              selectionColor: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ],
       ),
@@ -279,23 +378,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profil'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : _saveProfile,
-            child: Text(
-              'Simpan',
-              style: TextStyle(
-                color: _isLoading ? Colors.grey : Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Edit Profil')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -311,7 +394,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
+                        color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(50),
                         image: _selectedImageBytes != null
                             ? DecorationImage(
@@ -325,6 +408,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               )
                             : null,
                       ),
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
 
                     // Camera icon
@@ -337,13 +425,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           width: 32.0,
                           height: 32.0,
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Theme.of(context).colorScheme.tertiary,
                             borderRadius: BorderRadius.circular(16.0),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.camera_alt,
                             size: 16.0,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),
@@ -352,19 +440,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32.0),
+              const SizedBox(height: 24.0),
 
               // Email (read-only)
               TextFormField(
                 readOnly: true,
                 initialValue: _supabaseUserService.currentUser?.email ?? '',
                 enabled: false,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                   labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                  ),
                   filled: true,
-                  fillColor: Colors.grey,
+                  fillColor: Color(0xFFF5ECD9),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
 
@@ -373,10 +472,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               // User name
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                   labelText: 'Nama',
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  // Focused border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -392,10 +515,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.phone,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                   labelText: 'Nomor Telepon',
-                  prefixIcon: Icon(Icons.phone),
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default Border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  // Focused Border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 validator: (value) {
                   if (value != null && value.trim().isNotEmpty) {
@@ -412,12 +559,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               // Address
               TextFormField(
                 controller: _addressController,
-                maxLines: 3,
-                decoration: const InputDecoration(
+                maxLines: 1,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                   labelText: 'Alamat',
-                  prefixIcon: Icon(Icons.location_on),
-                  border: OutlineInputBorder(),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  // Default Border
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  // Focused border
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2.0,
+                    ),
+                  ),
                   alignLabelWithHint: true,
+                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
 
@@ -429,13 +600,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: const EdgeInsets.all(12.0),
                   margin: const EdgeInsets.only(bottom: 16.0),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade500,
+                    color: Theme.of(context).colorScheme.errorContainer,
                     border: Border.all(color: Colors.red.shade100),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
                     _errorMessage!,
-                    style: TextStyle(color: Colors.red.shade700),
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -446,17 +619,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _saveProfile,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
+                    )
                   ),
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 20.0,
                           width: 20.0,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         )
@@ -474,8 +650,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   icon: const Icon(Icons.lock),
                   label: const Text('Ubah Kata Sandi'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.orange,
-                    side: const BorderSide(color: Colors.orange),
+                    foregroundColor: Theme.of(context).colorScheme.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
               ),

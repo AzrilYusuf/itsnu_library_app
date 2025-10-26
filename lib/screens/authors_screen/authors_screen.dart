@@ -36,10 +36,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Galeri Penulis"),
-        backgroundColor: Colors.teal,
-      ),
+      appBar: AppBar(title: const Text('Galeri Penulis')),
       body: Column(
         children: [
           // Widget untuk menampilkan grid thumbnail
@@ -47,7 +44,14 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
             child: Consumer<AuthorProvider>(
               builder: (context, authorProvider, child) {
                 if (authorProvider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  );
                 } else if (authorProvider.hasError) {
                   return Center(
                     child: Text('Error: ${authorProvider.errorMessage}'),
@@ -115,8 +119,8 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
         onPressed: () async {
           GoRouter.of(context).go('/authors/form');
         },
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );

@@ -25,7 +25,7 @@ class ActionButton extends StatelessWidget {
         label: Text(label),
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          foregroundColor: Colors.white,
+          foregroundColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );

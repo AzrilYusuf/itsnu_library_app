@@ -34,11 +34,9 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.author.name),
-        backgroundColor: Colors.teal,
-      ),
+      appBar: AppBar(title: Text('Detail Penulis')),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -68,7 +66,14 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                 const SizedBox(height: 8.0),
 
                 if (bookProvider.isLoading) ...[
-                  const Center(child: CircularProgressIndicator()),
+                  Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
                 ] else if (bookProvider.hasError) ...[
                   Center(child: Text('Error: ${bookProvider.errorMessage}')),
                 ] else ...[
@@ -88,9 +93,11 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                         onTap: () {
                           GoRouter.of(context).go('/books/detail', extra: book);
                         },
+                        // Book Card
                         child: Card(
                           child: Column(
                             children: [
+                              // Book Cover
                               Container(
                                 height: 50.0,
                                 decoration: BoxDecoration(
@@ -103,12 +110,13 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                                 ),
 
                                 child: book.imageUrl == null
-                                    ? Icon(Icons.book, size: 60.0)
+                                    ? Icon(Icons.book, size: 50.0)
                                     : null,
                               ),
 
                               const SizedBox(height: 12.0),
 
+                              // Book Title
                               Text(
                                 book.title,
                                 style: Theme.of(context).textTheme.bodySmall,

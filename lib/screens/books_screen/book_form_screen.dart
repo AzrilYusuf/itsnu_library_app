@@ -145,8 +145,11 @@ class _BookFormScreenState extends State<BookFormScreen> {
           SnackBar(
             content: Text(
               'Gagal ${_isEditMode ? 'update' : 'membuat'} buku: ${bookProvider.errorMessage}',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
         );
         bookProvider.clearError();
@@ -154,7 +157,15 @@ class _BookFormScreenState extends State<BookFormScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        ),
       );
     } finally {
       if (mounted) {
@@ -183,7 +194,10 @@ class _BookFormScreenState extends State<BookFormScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+            child: Text(
+              'Hapus',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
           ),
         ],
       ),
@@ -210,8 +224,13 @@ class _BookFormScreenState extends State<BookFormScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal menghapus buku: ${bookProvider.errorMessage}'),
-            backgroundColor: Colors.red,
+            content: Text(
+              'Gagal menghapus buku: ${bookProvider.errorMessage}',
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
         );
         bookProvider.clearError();
@@ -219,7 +238,15 @@ class _BookFormScreenState extends State<BookFormScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(
+            'Error: $e',
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        ),
       );
     } finally {
       if (mounted) {
@@ -239,7 +266,6 @@ class _BookFormScreenState extends State<BookFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.book == null ? 'Tambah Buku' : 'Edit Buku'),
-        backgroundColor: Colors.teal,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -350,9 +376,10 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       foregroundColor: Colors.white,
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator(
+                        ? CircularProgressIndicator(
+                          strokeWidth: 2.0,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
+                              Theme.of(context).colorScheme.secondary,
                             ),
                           )
                         : Text(_isEditMode ? 'Update Buku' : 'Simpan Buku'),
@@ -387,13 +414,14 @@ class _BookFormScreenState extends State<BookFormScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _deleteBook,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
                       ),
                       child: _isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                          ? CircularProgressIndicator(
+                            strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.secondary,
                               ),
                             )
                           : const Text('Hapus Buku'),

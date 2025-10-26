@@ -10,8 +10,11 @@ ThemeData appTheme = ThemeData(
     seedColor: Color(0xFFEFDFBB),
     primary: Color(0xFFE6CFA9),
     secondary: Color(0xFF722F37),
+    secondaryContainer: Color(0xFFF4EAD4),
     surface: Color(0xFFEFDFBB),
     tertiary: Color(0xFFC1856D),
+    error: Color(0xFFAD2424),
+    errorContainer: Colors.red.shade300,
   ),
   textTheme: TextTheme(
     headlineLarge: TextStyle(
@@ -19,10 +22,9 @@ ThemeData appTheme = ThemeData(
       fontWeight: FontWeight.bold,
       fontSize: 28.0,
     ),
-    headlineMedium: TextStyle(
-      fontFamily: fontNameHeadline,
-      fontWeight: FontWeight.bold,
-      fontSize: 26.0,
+    headlineMedium: GoogleFonts.prozaLibre(
+      fontSize: 26,
+      fontWeight: FontWeight.w700,
     ),
     headlineSmall: TextStyle(
       fontFamily: fontNameHeadline,
@@ -59,10 +61,25 @@ ThemeData appTheme = ThemeData(
       fontWeight: FontWeight.normal,
       fontSize: 14.0,
     ),
+    labelSmall: TextStyle(
+      fontFamily: fontNameDefault,
+      fontWeight: FontWeight.normal,
+      fontSize: 12.0,
+    )
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: Color(0xFF722F37),
     foregroundColor: Color(0xFFE6CFA9),
+    titleTextStyle: GoogleFonts.prozaLibre(
+      color: Color(0xFFE6CFA9),
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+    ),
+    toolbarTextStyle: GoogleFonts.prozaLibre(
+      color: Color(0xFFE6CFA9),
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    ),
   ),
   useMaterial3: true,
 );

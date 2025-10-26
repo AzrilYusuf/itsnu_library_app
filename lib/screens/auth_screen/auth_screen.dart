@@ -113,10 +113,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   // Title
                   Text(
-                    "PERPUSITSNU",
+                    'PERPUS ITSNU',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
 
@@ -127,7 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
 
@@ -139,10 +140,40 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(),
+                        labelStyle: Theme.of(context).textTheme.bodyMedium!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                        errorStyle: Theme.of(context).textTheme.labelSmall!
+                            .copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.errorContainer,
+                            ),
+                        // Default border
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        // Focused border
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -160,15 +191,46 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   const SizedBox(height: 16.0),
 
+                  // Password field
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextFormField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         labelText: 'Kata Sandi',
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(),
+                        labelStyle: Theme.of(context).textTheme.bodyMedium!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                        errorStyle: Theme.of(context).textTheme.labelSmall!
+                            .copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.errorContainer,
+                            ),
+                        // Default border
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        // Focused border
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -208,40 +270,54 @@ class _AuthScreenState extends State<AuthScreen> {
                       padding: const EdgeInsets.all(12.0),
                       margin: const EdgeInsets.only(bottom: 16.0),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade300,
+                        color: Theme.of(context).colorScheme.errorContainer,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
                         _errorMessage!,
-                        style: TextStyle(color: Colors.red.shade900),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
 
                   // Submit button
-                  SizedBox(
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _handleSubmit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.secondary,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0, // Set the stroke width here
-                                valueColor: AlwaysStoppedAnimation(
-                                  Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 60.0),
+                    child: SizedBox(
+                      height: 48.0,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _handleSubmit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.surface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14.0),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0, // Set the stroke width here
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Theme.of(context).colorScheme.secondary,
+                                  ),
                                 ),
+                              )
+                            : Text(
+                                _isLogin ? 'Masuk' : 'Daftar',
+                                style: Theme.of(context).textTheme.titleSmall!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                    ),
                               ),
-                            )
-                          : Text(
-                              _isLogin ? 'Masuk' : 'Daftar',
-                              style: const TextStyle(fontSize: 16.0),
-                            ),
+                      ),
                     ),
                   ),
 
@@ -250,11 +326,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   // Toggle login/register
                   TextButton(
                     onPressed: _isLoading ? null : _toggleMode,
+                    style: ButtonStyle(
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    ),
                     child: Text(
                       _isLogin
                           ? 'Belum punya akun? Daftar di sini.'
                           : 'Sudah punya akun? Masuk di sini.',
-                      style: TextStyle(color: Colors.blue.shade700),
+                      selectionColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
