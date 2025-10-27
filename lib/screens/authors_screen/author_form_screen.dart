@@ -252,6 +252,7 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                   Center(
                     child: CircleAvatar(
                       radius: 70,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       backgroundImage: _currentPhotoUrl != null
                           ? NetworkImage(_currentPhotoUrl!)
                           : (_selectedImageBytes != null
@@ -260,7 +261,11 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                       child:
                           _currentPhotoUrl == null &&
                               _selectedImageBytes == null
-                          ? Icon(Icons.person, size: 60)
+                          ? Icon(
+                              Icons.person,
+                              size: 60,
+                              color: Theme.of(context).colorScheme.secondary,
+                            )
                           : null,
                     ),
                   ),
@@ -271,10 +276,34 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                 TextFormField(
                   controller: _nameController,
                   enabled: !_isLoading, // Disable when loading
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Nama Penulis',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium!
+                        .copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    // Default border
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    // Focused border
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2.0,
+                      ),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -295,8 +324,11 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                   icon: const Icon(Icons.photo_camera),
                   label: const Text('Unggah Foto Penulis'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
                   ),
                 ),
 
@@ -307,14 +339,19 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _saveAuthor,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.inversePrimary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
                     ),
                     child: _isLoading
                         ? CircularProgressIndicator(
                             strokeWidth: 2.0, // Set the stroke width
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                             ),
                           )
                         : Text(
@@ -335,8 +372,13 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                             Navigator.of(context).pop();
                           },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.teal,
-                      side: const BorderSide(color: Colors.teal),
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                     child: const Text('Batal'),
                   ),
@@ -353,6 +395,9 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error,
                         foregroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(

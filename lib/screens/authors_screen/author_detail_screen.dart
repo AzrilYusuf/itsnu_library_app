@@ -41,12 +41,17 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 40.0,
+              radius: 70.0,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               backgroundImage: widget.author.imageUrl != null
                   ? NetworkImage(widget.author.imageUrl!)
                   : null,
               child: widget.author.imageUrl == null
-                  ? Icon(Icons.person, size: 60.0)
+                  ? Icon(
+                      Icons.person,
+                      size: 60.0,
+                      color: Theme.of(context).colorScheme.secondary,
+                    )
                   : null,
             ),
 
@@ -54,14 +59,21 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
 
             Text(
               widget.author.name,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
 
             const SizedBox(height: 16.0),
 
             Column(
               children: [
-                Text('Buku:', style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  'Buku:',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
 
                 const SizedBox(height: 8.0),
 
@@ -80,11 +92,12 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(12.0),
+                    // padding: const EdgeInsets.all(10.0),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      crossAxisSpacing: 4.0,
-                      mainAxisSpacing: 4.0,
+                      crossAxisSpacing: 2.0,
+                      mainAxisSpacing: 2.0,
+                      childAspectRatio: 0.65,
                     ),
                     itemCount: filteredBooks.length,
                     itemBuilder: (context, index) {
@@ -94,13 +107,31 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                           GoRouter.of(context).go('/books/detail', extra: book);
                         },
                         // Book Card
-                        child: Card(
+                        child: Container(
+                          width: 100.0,
+                          height: 150.0,
+                          margin: const EdgeInsets.all(6.0),
+                          padding: const EdgeInsets.all(6.0),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            borderRadius: BorderRadius.circular(14.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 134, 87, 87),
+                                blurRadius: 2,
+                                offset: const Offset(0, 2.0),
+                              ),
+                            ],
+                          ),
                           child: Column(
                             children: [
                               // Book Cover
                               Container(
-                                height: 50.0,
+                                height: 90.0,
+                                width: 100.0,
                                 decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(12.0),
                                   image: book.imageUrl != null
                                       ? DecorationImage(
                                           image: NetworkImage(book.imageUrl!),
@@ -110,17 +141,27 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                                 ),
 
                                 child: book.imageUrl == null
-                                    ? Icon(Icons.book, size: 50.0)
+                                    ? Icon(
+                                        Icons.book,
+                                        size: 60.0,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
+                                      )
                                     : null,
                               ),
 
-                              const SizedBox(height: 12.0),
+                              const SizedBox(height: 4.0),
 
                               // Book Title
                               Text(
                                 book.title,
-                                style: Theme.of(context).textTheme.bodySmall,
-                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                    ),
                               ),
                             ],
                           ),

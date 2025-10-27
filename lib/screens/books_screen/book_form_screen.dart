@@ -280,6 +280,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                   Center(
                     child: CircleAvatar(
                       radius: 60,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       backgroundImage: _currentImageUrl != null
                           ? NetworkImage(_currentImageUrl!)
                           : (_selectedImageBytes != null
@@ -288,7 +289,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       child:
                           _currentImageUrl == null &&
                               _selectedImageBytes == null
-                          ? Icon(Icons.book, size: 50.0)
+                          ? Icon(Icons.book, size: 50.0, color: Theme.of(context).colorScheme.secondary)
                           : null,
                     ),
                   ),
@@ -298,10 +299,32 @@ class _BookFormScreenState extends State<BookFormScreen> {
                 TextFormField(
                   controller: _titleController,
                   enabled: !_isLoading, // Disable when loading
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Judul Buku',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.book),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium!
+                        .copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2.0,
+                      ),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.book,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -323,7 +346,26 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       : _selectedAuthorId,
                   decoration: InputDecoration(
                     labelText: 'Pilih Penulis',
-                    border: OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium!
+                        .copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   onChanged: (v) => setState(() => _selectedAuthorId = v),
                   items: authors
@@ -341,7 +383,27 @@ class _BookFormScreenState extends State<BookFormScreen> {
                   initialValue: _selectedCategory,
                   decoration: InputDecoration(
                     labelText: 'Pilih Kategori',
-                    border: OutlineInputBorder(),
+                    labelStyle: Theme.of(context).textTheme.bodyMedium!
+                        .copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    // Focused border
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   onChanged: (v) => setState(() => _selectedCategory = v),
                   items: BookCategory.values
@@ -359,8 +421,11 @@ class _BookFormScreenState extends State<BookFormScreen> {
                   icon: const Icon(Icons.image),
                   label: const Text('Unggah Cover Buku'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
                   ),
                 ),
 
@@ -372,12 +437,17 @@ class _BookFormScreenState extends State<BookFormScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _saveBook,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.inversePrimary,
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
                     ),
                     child: _isLoading
                         ? CircularProgressIndicator(
-                          strokeWidth: 2.0,
+                            strokeWidth: 2.0,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               Theme.of(context).colorScheme.secondary,
                             ),
@@ -398,8 +468,13 @@ class _BookFormScreenState extends State<BookFormScreen> {
                             Navigator.of(context).pop();
                           },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.teal,
-                      side: const BorderSide(color: Colors.teal),
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.0),
+                      ),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
                     child: const Text('Batal'),
                   ),
@@ -416,12 +491,15 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error,
                         foregroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(
-                            strokeWidth: 2.0,
+                              strokeWidth: 2.0,
                               valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.secondary,
                               ),
                             )
                           : const Text('Hapus Buku'),

@@ -65,6 +65,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                           crossAxisCount: 3,
                           crossAxisSpacing: 4.0,
                           mainAxisSpacing: 4.0,
+                          childAspectRatio: 0.70,
                         ),
                     itemCount: authors.length,
                     itemBuilder: (context, index) {
@@ -75,33 +76,63 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                             context,
                           ).go('/authors/form', extra: author);
                         },
+                        // Author card
                         child: Container(
-                          padding: const EdgeInsets.all(8.0),
+                          width: 100.0,
+                          height: 150.0,
+                          margin: const EdgeInsets.all(6.0),
+                          padding: const EdgeInsets.all(6.0),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.grey),
+                            color: Theme.of(context).colorScheme.tertiary,
+                            borderRadius: BorderRadius.circular(14.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 134, 87, 87),
+                                blurRadius: 2,
+                                offset: const Offset(0, 2.0),
+                              ),
+                            ],
                           ),
                           child: Column(
                             children: [
-                              Expanded(
-                                child: author.imageUrl != null
-                                    ? Image.network(
-                                        author.imageUrl!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                      )
-                                    : const Icon(
-                                        Icons.person,
-                                        size: 50,
-                                        color: Colors.deepPurple,
-                                      ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  author.name,
-                                  overflow: TextOverflow.ellipsis,
+                              // Author image
+                              Container(
+                                width: 90.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  // Set background image either from user metadata or default
+                                  image: author.imageUrl != null
+                                      ? DecorationImage(
+                                          image: NetworkImage(author.imageUrl!),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                                 ),
+                                child: author.imageUrl == null
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 60.0,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
+                                      )
+                                    : null,
+                              ),
+
+                              const SizedBox(height: 6.0),
+
+                              // Author name
+                              Text(
+                                author.name,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodySmall!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                    ),
                               ),
                             ],
                           ),

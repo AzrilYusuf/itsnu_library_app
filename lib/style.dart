@@ -13,6 +13,7 @@ ThemeData appTheme = ThemeData(
     secondaryContainer: Color(0xFFF4EAD4),
     surface: Color(0xFFEFDFBB),
     tertiary: Color(0xFFC1856D),
+    inversePrimary: Color(0xFF63A361), // For success button
     error: Color(0xFFAD2424),
     errorContainer: Colors.red.shade300,
   ),

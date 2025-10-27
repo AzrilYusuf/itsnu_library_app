@@ -55,11 +55,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             Center(
               child: CircleAvatar(
                 radius: 70.0,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 backgroundImage: widget.book.imageUrl != null
                     ? NetworkImage(widget.book.imageUrl!)
                     : null,
                 child: widget.book.imageUrl == null
-                    ? Icon(Icons.book, size: 60.0)
+                    ? Icon(Icons.book, size: 60.0, color: Theme.of(context).colorScheme.secondary)
                     : null,
               ),
             ),
@@ -68,27 +69,27 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
             Text(
               widget.book.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
 
             const SizedBox(height: 16.0),
 
             Text(
-              'Author: ${authors.name}',
-              style: const TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 20.0,
+              'Penulis: ${authors.name}',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
 
             const SizedBox(height: 16.0),
 
             Text(
-              'Category: ${widget.book.category.name}',
-              style: const TextStyle(fontSize: 16.0),
+              'Kategori: ${widget.book.category.name}',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
             // Add more book details here
           ],
