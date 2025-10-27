@@ -92,7 +92,6 @@ class _AuthorDetailScreenState extends State<AuthorDetailScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    // padding: const EdgeInsets.all(10.0),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 2.0,

@@ -50,10 +50,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Konfirmasi keluar'),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         content: const Text('Apakah Anda yakin ingin keluar?'),
         actions: [
           TextButton(
-            style: TextButton.styleFrom(backgroundColor: Colors.grey),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Batal'),
           ),
@@ -61,6 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextButton(
             style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
             ),
             onPressed: () => Navigator.of(
               context,

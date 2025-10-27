@@ -47,16 +47,29 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Pilih sumber foto'),
+          titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt),
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 title: const Text('Kamera'),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library),
+                leading: Icon(
+                  Icons.photo_library,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 title: const Text('Galeri'),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
@@ -160,20 +173,36 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Konfirmasi hapus'),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         content: Text(
           'Apakah Anda yakin ingin menghapus ${widget.author!.name}?',
         ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Batal'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              'Hapus',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
             ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Hapus'),
           ),
         ],
       ),
@@ -350,7 +379,7 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                     child: _isLoading
                         ? CircularProgressIndicator(
                             strokeWidth: 2.0, // Set the stroke width
-                            valueColor: AlwaysStoppedAnimation<Color>(
+                            valueColor: AlwaysStoppedAnimation(
                               Theme.of(context).colorScheme.primary,
                             ),
                           )
@@ -396,14 +425,14 @@ class _AuthorFormScreenState extends State<AuthorFormScreen> {
                         backgroundColor: Theme.of(context).colorScheme.error,
                         foregroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.0),
-                      ),
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(
                               strokeWidth: 2.0,
                               valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.primary,
                               ),
                             )
                           : const Text('Hapus Penulis'),

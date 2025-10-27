@@ -69,16 +69,29 @@ class _BookFormScreenState extends State<BookFormScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Pilih sumber foto'),
+          titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt),
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 title: const Text('Kamera'),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library),
+                leading: Icon(
+                  Icons.photo_library,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 title: const Text('Galeri'),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               ),
@@ -184,20 +197,36 @@ class _BookFormScreenState extends State<BookFormScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Konfirmasi hapus'),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        contentTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         content: Text(
           'Apakah Anda yakin ingin menghapus ${widget.book!.title}?',
         ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.secondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+            ),
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Batal'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              'Hapus',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.0),
+              ),
             ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Hapus'),
           ),
         ],
       ),
@@ -289,7 +318,11 @@ class _BookFormScreenState extends State<BookFormScreen> {
                       child:
                           _currentImageUrl == null &&
                               _selectedImageBytes == null
-                          ? Icon(Icons.book, size: 50.0, color: Theme.of(context).colorScheme.secondary)
+                          ? Icon(
+                              Icons.book,
+                              size: 50.0,
+                              color: Theme.of(context).colorScheme.secondary,
+                            )
                           : null,
                     ),
                   ),
@@ -449,7 +482,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                         ? CircularProgressIndicator(
                             strokeWidth: 2.0,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                             ),
                           )
                         : Text(_isEditMode ? 'Update Buku' : 'Simpan Buku'),
@@ -499,7 +532,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                           ? CircularProgressIndicator(
                               strokeWidth: 2.0,
                               valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.primary,
                               ),
                             )
                           : const Text('Hapus Buku'),
